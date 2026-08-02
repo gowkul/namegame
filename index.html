@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Name Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17102B;
+  --ink-2:#241A42;
+  --ink-3:#2F2354;
+  --bone:#FFF7EC;
+  --bone-2:#EFE1CE;
+  --marigold:#FFB627;
+  --jade:#3FCFA6;
+  --mauve:#9C8FC4;
+  --berry:#E0567A;
+  --dark:#241A42;
+  --display:"Fraunces",Georgia,serif;
+  --body:"Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --mono:"DM Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink);
+  background-image:radial-gradient(120% 60% at 50% -10%, rgba(255,182,39,.18) 0%, rgba(255,182,39,0) 60%);
+  background-attachment:fixed;
+  color:var(--bone);
+  font-family:var(--body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:460px;margin:0 auto;padding:26px 20px 130px}
+
+/* ---------- header ---------- */
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mauve);margin:0 0 14px
+}
+.who{
+  color:var(--marigold);border-bottom:1px dashed rgba(255,182,39,.5);
+  padding:0 2px;outline:none;min-width:34px;display:inline-block
+}
+.who:empty::before{content:"her name";color:rgba(156,143,196,.8)}
+.who:focus{background:rgba(255,182,39,.12);border-radius:3px}
+h1{
+  font-family:var(--display);font-optical-sizing:auto;
+  font-weight:600;font-size:clamp(38px,13vw,54px);line-height:.93;
+  letter-spacing:-.025em;margin:0 0 12px;font-variation-settings:"SOFT" 60,"WONK" 1
+}
+h1 em{font-style:italic;color:var(--marigold)}
+.sub{color:rgba(255,247,236,.62);font-size:14.5px;line-height:1.5;margin:0 0 22px;max-width:34ch}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:6px;background:rgba(255,247,236,.06);padding:5px;border-radius:999px;margin-bottom:18px}
+.tab{
+  flex:1;border:0;background:transparent;color:rgba(255,247,236,.6);
+  font-family:var(--body);font-size:12.5px;font-weight:500;letter-spacing:.01em;
+  padding:9px 4px;border-radius:999px;cursor:pointer;transition:background .18s,color .18s
+}
+.tab[aria-selected="true"]{background:var(--bone);color:var(--dark);font-weight:600}
+.tab:focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
+
+.panel{display:none}
+.panel.on{display:block;animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- filter chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.chip{
+  border:1px solid rgba(255,247,236,.18);background:transparent;color:rgba(255,247,236,.7);
+  font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:6px 11px;border-radius:999px;cursor:pointer;
+  transition:.16s
+}
+.chip[aria-pressed="true"]{background:var(--marigold);border-color:var(--marigold);color:var(--dark);font-weight:500}
+.chip:focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
+
+/* ---------- deck ---------- */
+.stage{position:relative;height:340px;margin:4px 0 18px;perspective:1000px}
+.card{
+  position:absolute;inset:0;background:var(--bone);color:var(--dark);
+  border-radius:22px;padding:26px 24px;display:flex;flex-direction:column;
+  box-shadow:0 18px 44px rgba(0,0,0,.45);will-change:transform;touch-action:none;cursor:grab
+}
+.card:active{cursor:grabbing}
+.card.behind{pointer-events:none}
+.card-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(36,26,66,.5)}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:1px}
+.card-name{
+  font-family:var(--display);font-weight:600;font-size:clamp(44px,15vw,62px);line-height:1;
+  letter-spacing:-.03em;margin:auto 0 0;font-variation-settings:"SOFT" 60,"WONK" 1
+}
+.card-mean{font-size:16px;line-height:1.4;color:rgba(36,26,66,.72);margin:10px 0 0}
+.card-foot{display:flex;gap:14px;margin-top:18px;padding-top:14px;border-top:1px solid rgba(36,26,66,.12);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:rgba(36,26,66,.5);text-transform:uppercase}
+.stamp{
+  position:absolute;top:24px;font-family:var(--mono);font-size:13px;letter-spacing:.16em;
+  padding:7px 13px;border-radius:8px;border:2px solid;opacity:0;text-transform:uppercase;font-weight:500
+}
+.stamp.keep{right:22px;color:var(--jade);border-color:var(--jade);transform:rotate(9deg)}
+.stamp.pass{left:22px;color:var(--mauve);border-color:var(--mauve);transform:rotate(-9deg)}
+
+.acts{display:flex;gap:12px;align-items:center;justify-content:center}
+.act{
+  border:1px solid rgba(255,247,236,.2);background:rgba(255,247,236,.05);color:var(--bone);
+  font-family:var(--body);font-size:14px;font-weight:500;padding:14px 0;border-radius:14px;flex:1;cursor:pointer;transition:.16s
+}
+.act.yes{background:var(--jade);border-color:var(--jade);color:#0B2C24;font-weight:600}
+.act.no:hover{background:rgba(255,247,236,.12)}
+.act:focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
+.mini{
+  border:0;background:none;color:var(--mauve);font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;cursor:pointer;padding:14px 8px;text-transform:uppercase
+}
+.mini:focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
+.hint{text-align:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:rgba(156,143,196,.75);margin-top:14px;text-transform:uppercase}
+
+.empty{
+  background:rgba(255,247,236,.05);border:1px dashed rgba(255,247,236,.2);border-radius:22px;
+  padding:34px 24px;text-align:center
+}
+.empty h3{font-family:var(--display);font-weight:600;font-size:24px;margin:0 0 8px;letter-spacing:-.02em}
+.empty p{color:rgba(255,247,236,.6);font-size:14px;line-height:1.5;margin:0 0 18px}
+.btn{
+  border:0;background:var(--marigold);color:var(--dark);font-family:var(--body);font-weight:600;font-size:14px;
+  padding:12px 20px;border-radius:12px;cursor:pointer
+}
+.btn.ghost{background:transparent;border:1px solid rgba(255,247,236,.25);color:var(--bone);font-weight:500}
+.btn:focus-visible{outline:2px solid var(--marigold);outline-offset:3px}
+
+/* ---------- browse ---------- */
+.search{
+  width:100%;background:rgba(255,247,236,.07);border:1px solid rgba(255,247,236,.14);
+  color:var(--bone);font-family:var(--body);font-size:15px;padding:13px 15px;border-radius:13px;margin-bottom:12px
+}
+.search::placeholder{color:rgba(255,247,236,.35)}
+.search:focus{outline:none;border-color:var(--marigold)}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{
+  display:flex;align-items:center;gap:12px;background:rgba(255,247,236,.05);
+  border:1px solid rgba(255,247,236,.09);border-radius:14px;padding:12px 14px
+}
+.row-main{flex:1;min-width:0}
+.row-name{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.02em;line-height:1.1}
+.row-mean{font-size:12.5px;color:rgba(255,247,236,.55);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.heart{
+  border:0;background:none;cursor:pointer;font-size:19px;line-height:1;padding:6px;color:rgba(255,247,236,.28);transition:.15s
+}
+.heart[aria-pressed="true"]{color:var(--berry);transform:scale(1.1)}
+.heart:focus-visible{outline:2px solid var(--marigold);outline-offset:2px;border-radius:6px}
+.count{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--mauve);text-transform:uppercase;margin:0 0 12px}
+
+/* ---------- quiz ---------- */
+.q{margin-bottom:24px}
+.q-n{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--marigold);text-transform:uppercase;margin-bottom:8px}
+.q-t{font-family:var(--display);font-weight:600;font-size:24px;letter-spacing:-.02em;line-height:1.15;margin:0 0 14px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{
+  text-align:left;border:1px solid rgba(255,247,236,.16);background:rgba(255,247,236,.04);
+  color:var(--bone);font-family:var(--body);font-size:15px;padding:14px 16px;border-radius:13px;cursor:pointer;transition:.16s
+}
+.opt[aria-pressed="true"]{background:var(--bone);color:var(--dark);border-color:var(--bone);font-weight:600}
+.opt:focus-visible{outline:2px solid var(--marigold);outline-offset:2px}
+.opt small{display:block;font-size:12px;opacity:.6;margin-top:2px;font-weight:400}
+
+/* ---------- bracelet (signature) ---------- */
+.band{
+  position:relative;display:flex;align-items:center;gap:10px;
+  background:var(--bone);color:var(--dark);border-radius:999px;padding:11px 18px;
+  box-shadow:0 6px 18px rgba(0,0,0,.3)
+}
+.band::before,.band::after{
+  content:"";position:absolute;width:9px;height:9px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--bone-2);top:50%;transform:translateY(-50%)
+}
+.band::before{left:7px}
+.band::after{right:7px}
+.band-inner{flex:1;display:flex;align-items:baseline;gap:9px;padding:0 6px;min-width:0;
+  border-top:1px dashed rgba(36,26,66,.22);border-bottom:1px dashed rgba(36,26,66,.22)}
+.band-name{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.02em;line-height:1.5}
+.band-mean{font-family:var(--mono);font-size:10px;color:rgba(36,26,66,.5);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
+.band-x{border:0;background:none;color:rgba(36,26,66,.35);font-size:17px;cursor:pointer;padding:2px 4px;line-height:1}
+.band-x:focus-visible{outline:2px solid var(--dark);outline-offset:1px;border-radius:4px}
+.band-list{display:flex;flex-direction:column;gap:9px}
+
+/* ---------- face-off ---------- */
+.vs{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.vs-card{
+  background:var(--bone);color:var(--dark);border:0;border-radius:18px;padding:26px 20px;cursor:pointer;
+  text-align:center;transition:transform .15s;box-shadow:0 12px 30px rgba(0,0,0,.35);font-family:var(--body)
+}
+.vs-card:hover{transform:translateY(-3px)}
+.vs-card:focus-visible{outline:3px solid var(--marigold);outline-offset:3px}
+.vs-name{font-family:var(--display);font-weight:600;font-size:36px;letter-spacing:-.03em;line-height:1}
+.vs-mean{font-size:13px;color:rgba(36,26,66,.6);margin-top:6px}
+.vs-or{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--mauve);text-transform:uppercase}
+.winner{text-align:center;padding:10px 0 6px}
+.winner .crown{font-size:30px;margin-bottom:10px}
+.winner-name{font-family:var(--display);font-weight:600;font-size:clamp(44px,16vw,68px);letter-spacing:-.035em;line-height:1;color:var(--marigold);margin-bottom:8px;font-variation-settings:"SOFT" 60,"WONK" 1}
+.winner p{color:rgba(255,247,236,.65);font-size:14px;margin:0 0 22px}
+
+/* ---------- shortlist bar ---------- */
+.bar{
+  position:fixed;left:0;right:0;bottom:0;background:rgba(23,16,43,.94);
+  backdrop-filter:blur(14px);border-top:1px solid rgba(255,247,236,.12);
+  padding:13px 20px calc(13px + env(safe-area-inset-bottom));z-index:40
+}
+.bar-in{max-width:460px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.bar-txt{flex:1;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--mauve);text-transform:uppercase}
+.bar-txt b{color:var(--bone);font-weight:500}
+
+.sheet{position:fixed;inset:0;z-index:50;display:none}
+.sheet.on{display:block}
+.veil{position:absolute;inset:0;background:rgba(10,6,20,.7)}
+.sheet-in{
+  position:absolute;left:0;right:0;bottom:0;background:var(--ink-2);border-radius:24px 24px 0 0;
+  padding:22px 20px calc(24px + env(safe-area-inset-bottom));max-height:80vh;overflow:auto;
+  max-width:460px;margin:0 auto;animation:up .26s cubic-bezier(.2,.8,.3,1)
+}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sheet-head h3{font-family:var(--display);font-weight:600;font-size:22px;margin:0;letter-spacing:-.02em}
+.sheet-acts{display:flex;gap:9px;margin-top:18px}
+.sheet-acts .btn{flex:1}
+.toast{
+  position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--bone);color:var(--dark);font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  padding:9px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:.24s;z-index:60;text-transform:uppercase
+}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">for <span class="who" id="who" contenteditable="true" spellcheck="false"></span> · five months in</p>
+  <h1>The Name <em>Game</em></h1>
+  <p class="sub">You don't know who they are yet. Might as well have fun deciding what to call them.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="deck">Deck</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="quiz">Quiz</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="browse">Browse</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="vs">Face-off</button>
+  </div>
+
+  <!-- DECK -->
+  <section class="panel on" id="p-deck">
+    <div class="chips" id="deckChips"></div>
+    <div class="stage" id="stage"></div>
+    <div class="acts" id="deckActs">
+      <button class="act no" id="bPass">Pass</button>
+      <button class="mini" id="bUndo">Undo</button>
+      <button class="act yes" id="bKeep">Keep</button>
+    </div>
+    <p class="hint" id="deckHint">Swipe or use ← →</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="p-quiz">
+    <div id="quizBody"></div>
+  </section>
+
+  <!-- BROWSE -->
+  <section class="panel" id="p-browse">
+    <input class="search" id="search" type="search" placeholder="Search a name or a meaning…" autocomplete="off">
+    <div class="chips" id="browseChips"></div>
+    <p class="count" id="browseCount"></p>
+    <div class="rows" id="rows"></div>
+  </section>
+
+  <!-- FACE-OFF -->
+  <section class="panel" id="p-vs">
+    <div id="vsBody"></div>
+  </section>
+</div>
+
+<div class="bar">
+  <div class="bar-in">
+    <p class="bar-txt" id="barTxt">Shortlist · <b>0</b></p>
+    <button class="btn ghost" id="bOpen">Open shortlist</button>
+  </div>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="veil" id="veil"></div>
+  <div class="sheet-in">
+    <div class="sheet-head">
+      <h3>The shortlist</h3>
+      <button class="band-x" id="bClose" style="color:rgba(255,247,236,.5);font-size:22px" aria-label="Close">×</button>
+    </div>
+    <div class="band-list" id="bands"></div>
+    <div class="sheet-acts">
+      <button class="btn ghost" id="bCopy">Copy list</button>
+      <button class="btn" id="bDuel">Run a face-off</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ DATA ============
+   name | meaning | origin S=Sanskrit M=Modern G=Global | b/g/u | tags | sound */
+const RAW = `
+Aarav|peaceful, calm|S|b|calm,classic|soft
+Vihaan|the first light of dawn|S|b|light,classic|soft
+Ishaan|the sun; the northeast|S|b|light,classic|soft
+Advait|one of a kind|S|b|wisdom,rare|strong
+Arjun|bright, shining|S|b|light,classic|strong
+Kabir|great; the poet-saint|S|b|wisdom,classic|strong
+Aryan|noble|S|b|classic|soft
+Rudra|fierce; a name for Shiva|S|b|strength,rare|strong
+Ved|sacred knowledge|S|b|wisdom,rare|strong
+Shaurya|bravery|S|b|strength|strong
+Atharv|knowledge; the fourth Veda|S|b|wisdom,rare|strong
+Dhruv|the pole star, unshakeable|S|b|sky,strength|strong
+Yuvan|forever young|S|b|rare|soft
+Ranveer|brave in battle|S|b|strength|strong
+Neel|blue, like the sky|S|b|sky,nature|soft
+Aadi|the beginning|S|b|classic|soft
+Ayaan|a gift of God|S|b|classic|soft
+Reyansh|a ray of light|S|b|light|soft
+Hriday|the heart|S|b|love,rare|soft
+Anay|answerable to no one|S|b|strength,rare|soft
+Ojas|vital energy, radiance|S|b|strength,rare|strong
+Nirvaan|free, unbound|S|b|calm,rare|soft
+Aarush|the first ray of the sun|S|b|light|soft
+Tejas|brilliance, sharp light|S|b|light,strength|strong
+Anaya|cared for, protected|S|g|love,calm|soft
+Aadhya|the first power|S|g|strength,classic|soft
+Saanvi|a name for Lakshmi|S|g|classic|soft
+Ira|the earth; goddess of speech|S|g|nature,rare|soft
+Anvi|of the forest; one who follows|S|g|nature,rare|soft
+Naina|eyes|S|g|love|soft
+Ahaana|the first rays of morning|S|g|light|soft
+Ishani|she who rules|S|g|strength|soft
+Tara|star|S|g|sky,classic|soft
+Meera|devoted; the ocean|S|g|water,love,classic|soft
+Riya|singer, graceful|S|g|classic|soft
+Diya|a small lamp|S|g|light,classic|soft
+Nitara|deeply rooted|S|g|nature,rare|soft
+Vanya|of the forest|S|u|nature|soft
+Prisha|a beloved gift|S|g|love|soft
+Sia|radiant; a name for Sita|S|g|light,rare|soft
+Aarna|the wave|S|g|water|soft
+Myra|sweet, admired|S|g|love|soft
+Avni|the earth|S|g|nature|soft
+Anika|grace; a name for Durga|S|g|strength,classic|soft
+Kiran|a ray of light|M|u|light,classic|soft
+Nihal|content, blissful|M|u|calm|soft
+Noor|light|M|u|light|soft
+Amal|hope|M|u|calm|soft
+Arya|noble|M|u|classic|soft
+Zia|light, splendour|M|u|light,rare|musical
+Nia|purpose; bright|M|u|rare|soft
+Isha|one who protects|M|g|strength|soft
+Jai|victory|M|b|strength|strong
+Ravi|the sun|M|b|light,classic|soft
+Veer|brave|M|b|strength|strong
+Om|the first sound|M|b|calm,rare|strong
+Ela|the earth; cardamom|M|g|nature,rare|soft
+Naya|new|M|u|rare|soft
+Mira|the ocean; wonderful|M|g|water,classic|soft
+Nila|deep blue|M|g|sky,nature|soft
+Rehan|sweet basil|M|b|nature|soft
+Sana|radiance|M|g|light|soft
+Suri|the sun; a princess|M|g|light,rare|soft
+Riaan|little king|M|b|classic|soft
+Ahan|dawn|M|b|light,rare|soft
+Inaya|care, concern|M|g|love,rare|soft
+Suhana|pleasant, lovely|M|g|calm|musical
+Zayn|beauty, grace|M|b|rare|strong
+Idris|studious, interpreter|M|b|wisdom,rare|strong
+Rumi|beauty; the poet|M|u|wisdom,rare|soft
+Kian|ancient; king|M|b|strength,classic|soft
+Ayla|moonlight|M|g|sky|soft
+Zara|blooming flower|M|g|nature|musical
+Leo|lion|G|b|strength,classic|strong
+Noah|rest, comfort|G|b|calm,classic|soft
+Eli|lifted up|G|b|classic|soft
+Milo|merciful; soldier|G|b|classic|soft
+Theo|a gift of God|G|b|classic|soft
+Ezra|help|G|b|classic,rare|strong
+Felix|lucky, happy|G|b|rare|strong
+Luca|bringer of light|G|b|light,classic|soft
+Jude|praised|G|b|classic|strong
+Ari|lion; my light|G|u|strength,light|soft
+Rafael|God has healed|G|b|classic|musical
+Soren|stern, serious|G|b|rare|strong
+Elio|the sun|G|b|light,rare|musical
+Nico|victory of the people|G|b|classic|soft
+Emil|eager, striving|G|b|rare|soft
+Caspian|of the sea|G|b|water,rare|musical
+Hugo|mind, spirit|G|b|rare|strong
+Arlo|between two hills|G|b|nature,rare|soft
+Otto|wealthy|G|b|rare|strong
+Cyrus|the sun|G|b|light,rare|strong
+Lior|my light|G|u|light,rare|soft
+Juno|queen of the gods|G|g|strength,rare|soft
+Nova|a new star|G|g|sky,rare|soft
+Iris|rainbow|G|g|nature,classic|soft
+Luna|the moon|G|g|sky,classic|soft
+Maya|illusion; water|G|g|water,classic|soft
+Naomi|pleasantness|G|g|calm,classic|soft
+Talia|dew from heaven|G|g|sky,nature|musical
+Sofia|wisdom|G|g|wisdom,classic|soft
+Elena|bright, shining|G|g|light,classic|musical
+Alma|soul|G|g|love,rare|soft
+Kiara|bright, clear|G|g|light|musical
+Rhea|flowing; mother of the gods|G|g|water,rare|soft
+Amara|everlasting|G|g|love,rare|soft
+Ziva|radiance|G|g|light,rare|soft
+Ines|pure|G|g|classic,rare|soft
+Lila|divine play; night|G|g|calm,classic|soft
+Ada|noble|G|g|classic,rare|soft
+Ivy|the climbing vine|G|g|nature|soft
+Wren|a small bird|G|u|nature,rare|strong
+Sage|wise; the herb|G|u|wisdom,nature|strong
+River|a river|G|u|water,nature|strong
+Rowan|the red-berried tree|G|u|nature|soft
+Quinn|wise, counsel|G|u|wisdom,rare|strong
+Remy|oarsman|G|u|rare|soft
+Sasha|defender|G|u|strength|musical
+Emery|brave, powerful|G|u|strength,rare|soft
+Indigo|the deep blue|G|u|sky,rare|musical
+Aspen|the trembling tree|G|u|nature,rare|soft
+Eden|delight|G|u|calm,rare|soft
+Kai|the sea|G|u|water,rare|strong
+Aria|melody, air|G|g|classic|soft
+`.trim();
+
+const NAMES = RAW.split("\n").map((l,i)=>{
+  const [n,m,o,g,t,s]=l.split("|");
+  return {i,n,m,o,g,t:t.split(","),s,len:n.length};
+});
+const ORIGIN={S:"Sanskrit",M:"Modern",G:"Global"};
+const GENDER={b:"for a boy",g:"for a girl",u:"either way"};
+const HUE={S:"#FFB627",M:"#3FCFA6",G:"#9C8FC4"};
+
+/* ============ STATE ============ */
+let kept=[];           // indices
+let seen=[];           // indices removed from deck
+let history=[];        // {i, action}
+let deckFilter="all";
+let browseFilter="all";
+let browseOrigin="all";
+let query="";
+let quizAns={};
+
+/* soft persistence — silently skipped if unavailable */
+async function save(){
+  try{ await window.storage.set("namegame",JSON.stringify({kept,who:who.textContent})); }catch(e){}
+}
+async function load(){
+  try{
+    const r=await window.storage.get("namegame");
+    if(r&&r.value){const d=JSON.parse(r.value); kept=d.kept||[]; if(d.who) who.textContent=d.who;}
+  }catch(e){}
+  renderBar();
+}
+
+/* ============ HELPERS ============ */
+const $=id=>document.getElementById(id);
+const who=$("who");
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+let toastT;
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1400);}
+function matchG(name,f){return f==="all"||name.g===f||(f==="u"&&name.g==="u");}
+
+/* ============ TABS ============ */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("on"));
+    $("p-"+t.dataset.p).classList.add("on");
+    if(t.dataset.p==="vs")renderVs();
+    if(t.dataset.p==="browse")renderRows();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+});
+function goTab(p){document.querySelector('.tab[data-p="'+p+'"]').click();}
+
+/* ============ CHIPS ============ */
+const GF=[["all","everyone"],["g","girl"],["b","boy"],["u","either way"]];
+function buildChips(el,active,cb){
+  el.innerHTML="";
+  GF.forEach(([v,l])=>{
+    const b=document.createElement("button");
+    b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",v===active());
+    b.onclick=()=>cb(v);
+    el.appendChild(b);
+  });
+}
+
+/* ============ DECK ============ */
+let deck=[];
+function buildDeck(){
+  deck=shuffle(NAMES.filter(n=>matchG(n,deckFilter)&&!seen.includes(n.i)).map(n=>n.i));
+  renderDeck();
+}
+function renderDeck(){
+  const st=$("stage");st.innerHTML="";
+  buildChips($("deckChips"),()=>deckFilter,v=>{deckFilter=v;seen=[];history=[];buildDeck();});
+  if(!deck.length){
+    $("deckActs").style.display="none";$("deckHint").style.display="none";
+    st.style.height="auto";
+    st.innerHTML='<div class="empty"><h3>That\'s the whole deck.</h3><p>'+
+      (kept.length?'You kept '+kept.length+' of them. Take those to the Face-off and crown one.':'Nothing kept yet — shuffle and go again.')+
+      '</p><button class="btn ghost" id="bReset">Shuffle again</button> '+
+      (kept.length>1?'<button class="btn" id="bGo">Face-off</button>':'')+'</div>';
+    $("bReset").onclick=()=>{seen=[];buildDeck();};
+    if($("bGo"))$("bGo").onclick=()=>goTab("vs");
+    return;
+  }
+  st.style.height="340px";
+  $("deckActs").style.display="flex";$("deckHint").style.display="block";
+  deck.slice(0,3).reverse().forEach((idx,pos)=>{
+    const n=NAMES[idx];
+    const depth=deck.slice(0,3).length-1-pos;
+    const c=document.createElement("div");
+    c.className="card"+(depth?" behind":"");
+    c.style.transform=`translateY(${depth*9}px) scale(${1-depth*.04})`;
+    c.style.zIndex=10-depth;
+    c.innerHTML=`
+      <div class="card-top">
+        <span><span class="dot" style="background:${HUE[n.o]}"></span>${ORIGIN[n.o]}</span>
+        <span>${GENDER[n.g]}</span>
+      </div>
+      <div class="stamp keep">Keep</div>
+      <div class="stamp pass">Pass</div>
+      <div class="card-name">${n.n}</div>
+      <div class="card-mean">${n.m}</div>
+      <div class="card-foot"><span>${n.len} letters</span><span>${n.s}</span><span>${n.t[0]}</span></div>`;
+    st.appendChild(c);
+    if(!depth)drag(c,idx);
+  });
+}
+function drag(card,idx){
+  let sx=0,sy=0,dx=0,down=false;
+  const keep=card.querySelector(".stamp.keep"),pass=card.querySelector(".stamp.pass");
+  card.addEventListener("pointerdown",e=>{down=true;sx=e.clientX;sy=e.clientY;card.setPointerCapture(e.pointerId);card.style.transition="none";});
+  card.addEventListener("pointermove",e=>{
+    if(!down)return;
+    dx=e.clientX-sx;const dy=e.clientY-sy;
+    card.style.transform=`translate(${dx}px,${dy*.35}px) rotate(${dx*.055}deg)`;
+    keep.style.opacity=Math.max(0,Math.min(1,dx/80));
+    pass.style.opacity=Math.max(0,Math.min(1,-dx/80));
+  });
+  const end=()=>{
+    if(!down)return;down=false;
+    card.style.transition="transform .28s ease, opacity .28s ease";
+    if(Math.abs(dx)>82){fly(card,dx>0?1:-1);decide(idx,dx>0);}
+    else{card.style.transform="";keep.style.opacity=0;pass.style.opacity=0;}
+    dx=0;
+  };
+  card.addEventListener("pointerup",end);
+  card.addEventListener("pointercancel",end);
+}
+function fly(card,dir){
+  card.style.transform=`translate(${dir*520}px,60px) rotate(${dir*26}deg)`;
+  card.style.opacity="0";
+}
+function decide(idx,yes){
+  seen.push(idx);
+  if(yes&&!kept.includes(idx))kept.push(idx);
+  history.push({idx,yes});
+  if(yes)toast("Kept · "+NAMES[idx].n);
+  renderBar();save();
+  setTimeout(()=>{deck=deck.filter(x=>x!==idx);renderDeck();},210);
+}
+$("bKeep").onclick=()=>{if(!deck.length)return;const c=document.querySelector(".card:not(.behind)");if(c){c.style.transition="transform .28s ease, opacity .28s ease";fly(c,1);}decide(deck[0],true);};
+$("bPass").onclick=()=>{if(!deck.length)return;const c=document.querySelector(".card:not(.behind)");if(c){c.style.transition="transform .28s ease, opacity .28s ease";fly(c,-1);}decide(deck[0],false);};
+$("bUndo").onclick=()=>{
+  const h=history.pop();if(!h)return;
+  seen=seen.filter(x=>x!==h.idx);
+  if(h.yes)kept=kept.filter(x=>x!==h.idx);
+  deck.unshift(h.idx);renderBar();renderDeck();save();toast("Back");
+};
+document.addEventListener("keydown",e=>{
+  if($("p-deck").classList.contains("on")&&document.activeElement.tagName!=="INPUT"&&!who.contains(document.activeElement)){
+    if(e.key==="ArrowRight")$("bKeep").click();
+    if(e.key==="ArrowLeft")$("bPass").click();
+  }
+});
+
+/* ============ BROWSE ============ */
+function renderRows(){
+  const el=$("rows");el.innerHTML="";
+  buildChips($("browseChips"),()=>browseFilter,v=>{browseFilter=v;renderRows();});
+  const oWrap=$("browseChips");
+  [["all","all roots"],["S","Sanskrit"],["M","Modern"],["G","Global"]].forEach(([v,l])=>{
+    const b=document.createElement("button");
+    b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",v===browseOrigin);
+    b.onclick=()=>{browseOrigin=v;renderRows();};
+    oWrap.appendChild(b);
+  });
+  const q=query.toLowerCase();
+  const list=NAMES.filter(n=>matchG(n,browseFilter)
+    &&(browseOrigin==="all"||n.o===browseOrigin)
+    &&(!q||n.n.toLowerCase().includes(q)||n.m.toLowerCase().includes(q)));
+  $("browseCount").textContent=list.length+" names";
+  list.forEach(n=>{
+    const r=document.createElement("div");r.className="row";
+    r.innerHTML=`<span class="dot" style="background:${HUE[n.o]}"></span>
+      <div class="row-main"><div class="row-name">${n.n}</div><div class="row-mean">${n.m} · ${GENDER[n.g]}</div></div>
+      <button class="heart" aria-pressed="${kept.includes(n.i)}" aria-label="Keep ${n.n}">${kept.includes(n.i)?"♥":"♡"}</button>`;
+    r.querySelector(".heart").onclick=e=>{
+      if(kept.includes(n.i)){kept=kept.filter(x=>x!==n.i);e.target.textContent="♡";e.target.setAttribute("aria-pressed","false");}
+      else{kept.push(n.i);e.target.textContent="♥";e.target.setAttribute("aria-pressed","true");toast("Kept · "+n.n);}
+      renderBar();save();
+    };
+    el.appendChild(r);
+  });
+  if(!list.length)el.innerHTML='<div class="empty"><h3>Nothing here.</h3><p>Try a shorter search, or loosen the filters.</p></div>';
+}
+$("search").oninput=e=>{query=e.target.value;renderRows();};
+
+/* ============ QUIZ ============ */
+const QUIZ=[
+  {k:"sound",t:"How should it sound out loud?",o:[["soft","Soft and flowing","Aarav, Luna, Meera"],["strong","Short and strong","Veer, Wren, Leo"],["musical","Musical and unusual","Elena, Sasha, Indigo"],["any","Surprise me",""]]},
+  {k:"origin",t:"Where should it come from?",o:[["S","Sanskrit roots","meaning it can grow into"],["M","Modern and short","travels anywhere"],["G","From further afield","Global picks"],["any","Mix it all up",""]]},
+  {k:"len",t:"How long?",o:[["s","Three or four letters","Ira, Veer, Kai"],["m","Around five","Meera, Milo"],["any","Length doesn't matter",""]]},
+  {k:"vibe",t:"Familiar or rare?",o:[["classic","Something rooted","people will know it"],["rare","Something rare","they'll be the only one"],["any","Either",""]]},
+  {k:"theme",t:"What should it mean?",o:[["light","Light and the sun",""],["nature","Earth, trees, water",""],["sky","Sky, moon, stars",""],["strength","Strength and calm",""]]}
+];
+function renderQuiz(){
+  const b=$("quizBody");b.innerHTML="";
+  QUIZ.forEach((q,i)=>{
+    const d=document.createElement("div");d.className="q";
+    d.innerHTML=`<div class="q-n">Question ${i+1} of ${QUIZ.length}</div><h2 class="q-t">${q.t}</h2>`;
+    const o=document.createElement("div");o.className="opts";
+    q.o.forEach(([v,l,s])=>{
+      const btn=document.createElement("button");btn.className="opt";
+      btn.setAttribute("aria-pressed",quizAns[q.k]===v);
+      btn.innerHTML=l+(s?`<small>${s}</small>`:"");
+      btn.onclick=()=>{quizAns[q.k]=v;renderQuiz();};
+      o.appendChild(btn);
+    });
+    d.appendChild(o);b.appendChild(d);
+  });
+  const done=Object.keys(quizAns).length===QUIZ.length;
+  const go=document.createElement("button");
+  go.className="btn";go.style.width="100%";go.style.padding="15px";
+  go.textContent=done?"Show my names":"Answer all five to see names";
+  go.disabled=!done;go.style.opacity=done?1:.4;
+  go.onclick=showQuizResults;
+  b.appendChild(go);
+}
+function showQuizResults(){
+  const a=quizAns;
+  const scored=NAMES.map(n=>{
+    let s=0;
+    if(a.sound==="any"||n.s===a.sound)s+=2;
+    if(a.origin==="any"||n.o===a.origin)s+=2;
+    if(a.len==="any"||(a.len==="s"&&n.len<=4)||(a.len==="m"&&n.len===5))s+=2;
+    if(a.vibe==="any"||n.t.includes(a.vibe))s+=2;
+    if(n.t.includes(a.theme))s+=3;
+    if(a.theme==="nature"&&n.t.includes("water"))s+=2;
+    if(a.theme==="strength"&&n.t.includes("calm"))s+=2;
+    return{n,s};
+  }).sort((x,y)=>y.s-x.s||Math.random()-.5).slice(0,8);
+  const b=$("quizBody");b.innerHTML="";
+  b.innerHTML=`<div class="q-n">Your results</div><h2 class="q-t" style="margin-bottom:6px">Eight that fit what you said.</h2>
+    <p class="sub" style="margin-bottom:18px">Tap the heart on any of them.</p><div class="rows" id="qrows"></div>`;
+  const el=$("qrows");
+  scored.forEach(({n})=>{
+    const r=document.createElement("div");r.className="row";
+    r.innerHTML=`<span class="dot" style="background:${HUE[n.o]}"></span>
+      <div class="row-main"><div class="row-name">${n.n}</div><div class="row-mean">${n.m} · ${GENDER[n.g]}</div></div>
+      <button class="heart" aria-pressed="${kept.includes(n.i)}" aria-label="Keep ${n.n}">${kept.includes(n.i)?"♥":"♡"}</button>`;
+    r.querySelector(".heart").onclick=e=>{
+      if(kept.includes(n.i)){kept=kept.filter(x=>x!==n.i);e.target.textContent="♡";}
+      else{kept.push(n.i);e.target.textContent="♥";toast("Kept · "+n.n);}
+      renderBar();save();
+    };
+    el.appendChild(r);
+  });
+  const again=document.createElement("button");
+  again.className="btn ghost";again.style.width="100%";again.style.marginTop="18px";
+  again.textContent="Take it again";
+  again.onclick=()=>{quizAns={};renderQuiz();};
+  b.appendChild(again);
+}
+
+/* ============ FACE-OFF ============ */
+let queue=[],next=[],champ=null;
+function renderVs(){
+  const b=$("vsBody");b.innerHTML="";
+  if(kept.length<2){
+    b.innerHTML=`<div class="empty"><h3>Two names, minimum.</h3><p>Keep a few from the deck first, then come back and knock them out one pair at a time.</p><button class="btn" id="bToDeck">Go to the deck</button></div>`;
+    $("bToDeck").onclick=()=>goTab("deck");return;
+  }
+  if(champ){
+    const n=NAMES[champ];
+    b.innerHTML=`<div class="winner"><div class="crown">🌙</div>
+      <div class="winner-name">${n.n}</div>
+      <p>${n.m} · ${ORIGIN[n.o]} · ${GENDER[n.g]}</p></div>
+      <div class="band"><div class="band-inner"><span class="band-name">${n.n}</span><span class="band-mean">${n.m}</span></div></div>
+      <div class="sheet-acts"><button class="btn ghost" id="bAgain">Run it again</button></div>`;
+    $("bAgain").onclick=()=>{champ=null;startVs();};
+    return;
+  }
+  if(!queue.length&&!next.length)startVs();
+  if(queue.length<2){
+    if(next.length+queue.length===1){champ=next[0]??queue[0];renderVs();return;}
+    queue=shuffle(next.concat(queue));next=[];
+  }
+  const [a,c]=[NAMES[queue[0]],NAMES[queue[1]]];
+  const left=Math.max(queue.length+next.length-1,0);
+  b.innerHTML=`<p class="count">${left} to knock out · pick the one you'd actually call out loud</p>
+    <div class="vs">
+      <button class="vs-card" id="vsA"><div class="vs-name">${a.n}</div><div class="vs-mean">${a.m}</div></button>
+      <div class="vs-or">or</div>
+      <button class="vs-card" id="vsB"><div class="vs-name">${c.n}</div><div class="vs-mean">${c.m}</div></button>
+    </div>`;
+  $("vsA").onclick=()=>pick(0);
+  $("vsB").onclick=()=>pick(1);
+}
+function startVs(){queue=shuffle(kept.slice());next=[];champ=null;}
+function pick(w){
+  const win=queue[w];queue.splice(0,2);next.push(win);
+  if(!queue.length&&next.length===1){champ=next[0];}
+  renderVs();
+}
+$("bDuel").onclick=()=>{closeSheet();startVs();goTab("vs");};
+
+/* ============ SHORTLIST ============ */
+function renderBar(){
+  $("barTxt").innerHTML="Shortlist · <b>"+kept.length+"</b>";
+}
+function renderBands(){
+  const el=$("bands");el.innerHTML="";
+  if(!kept.length){el.innerHTML='<p class="sub" style="margin:0">Nothing kept yet. Swipe a few in the deck and they\'ll show up here.</p>';return;}
+  kept.forEach(i=>{
+    const n=NAMES[i];
+    const d=document.createElement("div");d.className="band";
+    d.innerHTML=`<div class="band-inner"><span class="band-name">${n.n}</span><span class="band-mean">${n.m}</span></div>
+      <button class="band-x" aria-label="Remove ${n.n}">×</button>`;
+    d.querySelector(".band-x").onclick=()=>{kept=kept.filter(x=>x!==i);renderBands();renderBar();save();renderRows();};
+    el.appendChild(d);
+  });
+}
+function openSheet(){renderBands();$("sheet").classList.add("on");}
+function closeSheet(){$("sheet").classList.remove("on");}
+$("bOpen").onclick=openSheet;
+$("bClose").onclick=closeSheet;
+$("veil").onclick=closeSheet;
+$("bCopy").onclick=async()=>{
+  const txt=kept.map(i=>NAMES[i].n+" — "+NAMES[i].m).join("\n");
+  try{await navigator.clipboard.writeText(txt);toast("Copied");}
+  catch(e){toast("Couldn't copy");}
+};
+who.addEventListener("blur",save);
+who.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();who.blur();}});
+
+/* ============ GO ============ */
+buildDeck();renderQuiz();renderRows();renderBar();load();
+</script>
+</body>
+</html>
