@@ -6,7 +6,7 @@
 <title>The Name Game</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600&family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#17102B;
@@ -22,6 +22,7 @@
   --display:"Fraunces",Georgia,serif;
   --body:"Inter Tight","Helvetica Neue",Arial,sans-serif;
   --mono:"DM Mono",ui-monospace,monospace;
+  --dn:"Noto Sans Devanagari","Noto Sans",var(--body);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -41,18 +42,13 @@ body{
   font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--mauve);margin:0 0 14px
 }
-.who{
-  color:var(--marigold);border-bottom:1px dashed rgba(255,182,39,.5);
-  padding:0 2px;outline:none;min-width:34px;display:inline-block
-}
-.who:empty::before{content:"her name";color:rgba(156,143,196,.8)}
-.who:focus{background:rgba(255,182,39,.12);border-radius:3px}
 h1{
   font-family:var(--display);font-optical-sizing:auto;
   font-weight:600;font-size:clamp(38px,13vw,54px);line-height:.93;
   letter-spacing:-.025em;margin:0 0 12px;font-variation-settings:"SOFT" 60,"WONK" 1
 }
 h1 em{font-style:italic;color:var(--marigold)}
+h1 .by{font-family:var(--body);font-size:13px;font-weight:500;letter-spacing:.02em;color:rgba(255,247,236,.45);vertical-align:middle;margin-left:2px}
 .sub{color:rgba(255,247,236,.62);font-size:14.5px;line-height:1.5;margin:0 0 22px;max-width:34ch}
 
 /* ---------- tabs ---------- */
@@ -94,6 +90,7 @@ h1 em{font-style:italic;color:var(--marigold)}
   font-family:var(--display);font-weight:600;font-size:clamp(44px,15vw,62px);line-height:1;
   letter-spacing:-.03em;margin:auto 0 0;font-variation-settings:"SOFT" 60,"WONK" 1
 }
+.card-dn{font-family:var(--dn);font-weight:400;font-size:16px;color:rgba(36,26,66,.42);margin:3px 0 0}
 .card-mean{font-size:16px;line-height:1.4;color:rgba(36,26,66,.72);margin:10px 0 0}
 .card-foot{display:flex;gap:14px;margin-top:18px;padding-top:14px;border-top:1px solid rgba(36,26,66,.12);
   font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:rgba(36,26,66,.5);text-transform:uppercase}
@@ -147,6 +144,7 @@ h1 em{font-style:italic;color:var(--marigold)}
 .row-main{flex:1;min-width:0}
 .row-name{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.02em;line-height:1.1}
 .row-mean{font-size:12.5px;color:rgba(255,247,236,.55);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-dn{font-family:var(--dn);font-size:12.5px;color:rgba(255,247,236,.4);margin-top:1px}
 .heart{
   border:0;background:none;cursor:pointer;font-size:19px;line-height:1;padding:6px;color:rgba(255,247,236,.28);transition:.15s
 }
@@ -196,6 +194,7 @@ h1 em{font-style:italic;color:var(--marigold)}
 .vs-card:hover{transform:translateY(-3px)}
 .vs-card:focus-visible{outline:3px solid var(--marigold);outline-offset:3px}
 .vs-name{font-family:var(--display);font-weight:600;font-size:36px;letter-spacing:-.03em;line-height:1}
+.vs-dn{font-family:var(--dn);font-size:15px;color:rgba(36,26,66,.45);margin-top:4px}
 .vs-mean{font-size:13px;color:rgba(36,26,66,.6);margin-top:6px}
 .vs-or{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--mauve);text-transform:uppercase}
 .winner{text-align:center;padding:10px 0 6px}
@@ -232,15 +231,34 @@ h1 em{font-style:italic;color:var(--marigold)}
   padding:9px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:.24s;z-index:60;text-transform:uppercase
 }
 .toast.on{opacity:1;transform:translateX(-50%)}
+
+/* ---------- intro ---------- */
+.intro{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:28px}
+.intro-veil{position:absolute;inset:0;background:rgba(10,6,20,.92);backdrop-filter:blur(6px)}
+.intro-card{position:relative;max-width:380px;text-align:center;animation:introIn .5s cubic-bezier(.2,.8,.3,1)}
+@keyframes introIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.intro-to{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mauve);margin:0 0 20px}
+.intro-line{font-family:var(--display);font-weight:600;font-size:clamp(23px,7vw,30px);line-height:1.32;letter-spacing:-.02em;color:var(--bone);margin:0 0 16px;font-variation-settings:"SOFT" 60,"WONK" 1}
+.intro-line em{font-style:italic;color:var(--marigold)}
+.intro .btn{margin-top:8px;padding:14px 30px}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
 </style>
 </head>
 <body>
+<div class="intro" id="intro">
+  <div class="intro-veil" id="introVeil"></div>
+  <div class="intro-card">
+    <p class="intro-to">Shimlu,</p>
+    <p class="intro-line">Our little one is going to be our <em>north star</em>.</p>
+    <p class="intro-line">Let's find them a name worth it.</p>
+    <button class="btn" id="introGo">Let's begin</button>
+  </div>
+</div>
 <div class="wrap">
-  <p class="eyebrow">for <span class="who" id="who" contenteditable="true" spellcheck="false"></span> · five months in</p>
-  <h1>The Name <em>Game</em></h1>
+  <p class="eyebrow">Let's find a name for junior jhangs and shimlu</p>
+  <h1>The Name <em>Game</em> <span class="by">by Uncle G</span></h1>
   <p class="sub">You don't know who they are yet. Might as well have fun deciding what to call them.</p>
 
   <div class="tabs" role="tablist">
@@ -253,6 +271,7 @@ h1 em{font-style:italic;color:var(--marigold)}
   <!-- DECK -->
   <section class="panel on" id="p-deck">
     <div class="chips" id="deckChips"></div>
+    <div class="chips" id="deckAlphaChips"></div>
     <div class="stage" id="stage"></div>
     <div class="acts" id="deckActs">
       <button class="act no" id="bPass">Pass</button>
@@ -271,6 +290,8 @@ h1 em{font-style:italic;color:var(--marigold)}
   <section class="panel" id="p-browse">
     <input class="search" id="search" type="search" placeholder="Search a name or a meaning…" autocomplete="off">
     <div class="chips" id="browseChips"></div>
+    <p class="count" style="margin:2px 0 8px">Nakshatra match · starting syllable</p>
+    <div class="chips" id="sylChips"></div>
     <p class="count" id="browseCount"></p>
     <div class="rows" id="rows"></div>
   </section>
@@ -307,172 +328,1387 @@ h1 em{font-style:italic;color:var(--marigold)}
 
 <script>
 /* ============ DATA ============
-   name | meaning | origin S=Sanskrit M=Modern G=Global | b/g/u | tags | sound */
+   name | devanagari | meaning | origin S=Sanskrit G=Global | b/g/u | tags | sound
+   Weighted for a Hindu family in Mumbai: ~70% Sanskrit/Indian, ~30% global.
+   Devanagari is left blank wherever the correct script wasn't certain. */
 const RAW = `
-Aarav|peaceful, calm|S|b|calm,classic|soft
-Vihaan|the first light of dawn|S|b|light,classic|soft
-Ishaan|the sun; the northeast|S|b|light,classic|soft
-Advait|one of a kind|S|b|wisdom,rare|strong
-Arjun|bright, shining|S|b|light,classic|strong
-Kabir|great; the poet-saint|S|b|wisdom,classic|strong
-Aryan|noble|S|b|classic|soft
-Rudra|fierce; a name for Shiva|S|b|strength,rare|strong
-Ved|sacred knowledge|S|b|wisdom,rare|strong
-Shaurya|bravery|S|b|strength|strong
-Atharv|knowledge; the fourth Veda|S|b|wisdom,rare|strong
-Dhruv|the pole star, unshakeable|S|b|sky,strength|strong
-Yuvan|forever young|S|b|rare|soft
-Ranveer|brave in battle|S|b|strength|strong
-Neel|blue, like the sky|S|b|sky,nature|soft
-Aadi|the beginning|S|b|classic|soft
-Ayaan|a gift of God|S|b|classic|soft
-Reyansh|a ray of light|S|b|light|soft
-Hriday|the heart|S|b|love,rare|soft
-Anay|answerable to no one|S|b|strength,rare|soft
-Ojas|vital energy, radiance|S|b|strength,rare|strong
-Nirvaan|free, unbound|S|b|calm,rare|soft
-Aarush|the first ray of the sun|S|b|light|soft
-Tejas|brilliance, sharp light|S|b|light,strength|strong
-Anaya|cared for, protected|S|g|love,calm|soft
-Aadhya|the first power|S|g|strength,classic|soft
-Saanvi|a name for Lakshmi|S|g|classic|soft
-Ira|the earth; goddess of speech|S|g|nature,rare|soft
-Anvi|of the forest; one who follows|S|g|nature,rare|soft
-Naina|eyes|S|g|love|soft
-Ahaana|the first rays of morning|S|g|light|soft
-Ishani|she who rules|S|g|strength|soft
-Tara|star|S|g|sky,classic|soft
-Meera|devoted; the ocean|S|g|water,love,classic|soft
-Riya|singer, graceful|S|g|classic|soft
-Diya|a small lamp|S|g|light,classic|soft
-Nitara|deeply rooted|S|g|nature,rare|soft
-Vanya|of the forest|S|u|nature|soft
-Prisha|a beloved gift|S|g|love|soft
-Sia|radiant; a name for Sita|S|g|light,rare|soft
-Aarna|the wave|S|g|water|soft
-Myra|sweet, admired|S|g|love|soft
-Avni|the earth|S|g|nature|soft
-Anika|grace; a name for Durga|S|g|strength,classic|soft
-Kiran|a ray of light|M|u|light,classic|soft
-Nihal|content, blissful|M|u|calm|soft
-Noor|light|M|u|light|soft
-Amal|hope|M|u|calm|soft
-Arya|noble|M|u|classic|soft
-Zia|light, splendour|M|u|light,rare|musical
-Nia|purpose; bright|M|u|rare|soft
-Isha|one who protects|M|g|strength|soft
-Jai|victory|M|b|strength|strong
-Ravi|the sun|M|b|light,classic|soft
-Veer|brave|M|b|strength|strong
-Om|the first sound|M|b|calm,rare|strong
-Ela|the earth; cardamom|M|g|nature,rare|soft
-Naya|new|M|u|rare|soft
-Mira|the ocean; wonderful|M|g|water,classic|soft
-Nila|deep blue|M|g|sky,nature|soft
-Rehan|sweet basil|M|b|nature|soft
-Sana|radiance|M|g|light|soft
-Suri|the sun; a princess|M|g|light,rare|soft
-Riaan|little king|M|b|classic|soft
-Ahan|dawn|M|b|light,rare|soft
-Inaya|care, concern|M|g|love,rare|soft
-Suhana|pleasant, lovely|M|g|calm|musical
-Zayn|beauty, grace|M|b|rare|strong
-Idris|studious, interpreter|M|b|wisdom,rare|strong
-Rumi|beauty; the poet|M|u|wisdom,rare|soft
-Kian|ancient; king|M|b|strength,classic|soft
-Ayla|moonlight|M|g|sky|soft
-Zara|blooming flower|M|g|nature|musical
-Leo|lion|G|b|strength,classic|strong
-Noah|rest, comfort|G|b|calm,classic|soft
-Eli|lifted up|G|b|classic|soft
-Milo|merciful; soldier|G|b|classic|soft
-Theo|a gift of God|G|b|classic|soft
-Ezra|help|G|b|classic,rare|strong
-Felix|lucky, happy|G|b|rare|strong
-Luca|bringer of light|G|b|light,classic|soft
-Jude|praised|G|b|classic|strong
-Ari|lion; my light|G|u|strength,light|soft
-Rafael|God has healed|G|b|classic|musical
-Soren|stern, serious|G|b|rare|strong
-Elio|the sun|G|b|light,rare|musical
-Nico|victory of the people|G|b|classic|soft
-Emil|eager, striving|G|b|rare|soft
-Caspian|of the sea|G|b|water,rare|musical
-Hugo|mind, spirit|G|b|rare|strong
-Arlo|between two hills|G|b|nature,rare|soft
-Otto|wealthy|G|b|rare|strong
-Cyrus|the sun|G|b|light,rare|strong
-Lior|my light|G|u|light,rare|soft
-Juno|queen of the gods|G|g|strength,rare|soft
-Nova|a new star|G|g|sky,rare|soft
-Iris|rainbow|G|g|nature,classic|soft
-Luna|the moon|G|g|sky,classic|soft
-Maya|illusion; water|G|g|water,classic|soft
-Naomi|pleasantness|G|g|calm,classic|soft
-Talia|dew from heaven|G|g|sky,nature|musical
-Sofia|wisdom|G|g|wisdom,classic|soft
-Elena|bright, shining|G|g|light,classic|musical
-Alma|soul|G|g|love,rare|soft
-Kiara|bright, clear|G|g|light|musical
-Rhea|flowing; mother of the gods|G|g|water,rare|soft
-Amara|everlasting|G|g|love,rare|soft
-Ziva|radiance|G|g|light,rare|soft
-Ines|pure|G|g|classic,rare|soft
-Lila|divine play; night|G|g|calm,classic|soft
-Ada|noble|G|g|classic,rare|soft
-Ivy|the climbing vine|G|g|nature|soft
-Wren|a small bird|G|u|nature,rare|strong
-Sage|wise; the herb|G|u|wisdom,nature|strong
-River|a river|G|u|water,nature|strong
-Rowan|the red-berried tree|G|u|nature|soft
-Quinn|wise, counsel|G|u|wisdom,rare|strong
-Remy|oarsman|G|u|rare|soft
-Sasha|defender|G|u|strength|musical
-Emery|brave, powerful|G|u|strength,rare|soft
-Indigo|the deep blue|G|u|sky,rare|musical
-Aspen|the trembling tree|G|u|nature,rare|soft
-Eden|delight|G|u|calm,rare|soft
-Kai|the sea|G|u|water,rare|strong
-Aria|melody, air|G|g|classic|soft
+Aarav|आरव|peaceful, calm|S|b|calm,classic|soft
+Vihaan|विहान|the first light of dawn|S|b|light,classic|soft
+Ishaan|ईशान|the sun; a name of Shiva as guardian of the northeast|S|b|light,classic|soft
+Advait|अद्वैत|one without a second, non-dual|S|b|wisdom,rare|strong
+Arjun|अर्जुन|bright and shining; the Mahabharata's hero|S|b|light,classic|strong
+Aryan|आर्यन|noble|S|b|classic|soft
+Rudra|रुद्र|fierce; a name for Shiva|S|b|strength,rare|strong
+Ved|वेद|sacred knowledge|S|b|wisdom,rare|strong
+Shaurya|शौर्य|bravery|S|b|strength|strong
+Atharv|अथर्व|steadfast; the Atharva Veda|S|b|wisdom,rare|strong
+Dhruv|ध्रुव|the pole star, unshakeable|S|b|sky,strength|strong
+Ranveer|रणवीर|brave in battle|S|b|strength|strong
+Neel|नील|blue, like the sky|S|b|sky,nature|soft
+Aadi|आदि|the beginning|S|b|classic|soft
+Reyansh|रेयांश|a ray, a portion of the divine|S|b|light,rare|soft
+Hriday|हृदय|the heart|S|b|love,rare|soft
+Ojas|ओजस्|vital energy, radiance|S|b|strength,rare|strong
+Nirvaan|निर्वाण|liberation, freedom|S|b|calm,rare|soft
+Aarush|आरुष|the first ray of the sun|S|b|light|soft
+Tejas|तेजस्|brilliance, sharp radiance|S|b|light,strength|strong
+Aditya|आदित्य|the sun; son of Aditi|S|b|light,classic|strong
+Akash|आकाश|the sky|S|b|sky,classic|soft
+Krishna|कृष्ण|dark-complexioned; the deity Krishna|S|b|classic|strong
+Rohan|रोहन|ascending, rising|S|b|classic|soft
+Shiv|शिव|auspicious one; the deity Shiva|S|b|calm,classic|strong
+Ram|राम|pleasing, delightful; the deity Rama|S|b|classic|strong
+Madhav|माधव|sweet as honey; a name of Krishna|S|b|love,classic|soft
+Keshav|केशव|beautiful-haired; a name of Krishna|S|b|classic|soft
+Yash|यश|fame, glory|S|b|classic|strong
+Kunal|कुणाल|a lotus|S|b|nature,rare|soft
+Nikhil|निखिल|whole, entire|S|b|classic|soft
+Arnav|अर्णव|the ocean|S|b|water,classic|strong
+Ansh|अंश|a part of the divine|S|b|rare|strong
+Om|ॐ|the primordial sound|S|b|calm,rare|strong
+Divyansh|दिव्यांश|a divine portion|S|b|light,rare|soft
+Harsh|हर्ष|joy|S|b|calm,classic|strong
+Nishant|निशान्त|the end of night, dawn|S|b|light,rare|strong
+Samarth|समर्थ|capable, powerful|S|b|strength,rare|strong
+Siddharth|सिद्धार्थ|one who has achieved his goal; the Buddha's given name|S|b|wisdom,classic|strong
+Vedant|वेदान्त|the culmination of the Vedas|S|b|wisdom,rare|strong
+Chaitanya|चैतन्य|consciousness, life-force|S|b|wisdom,rare|musical
+Girish|गिरीश|lord of the mountains; a name of Shiva|S|b|strength,classic|strong
+Manav|मानव|human, mankind|S|b|classic|soft
+Shreyas|श्रेयस|the more auspicious path|S|b|wisdom,rare|strong
+Vansh|वंश|lineage|S|b|rare|strong
+Ayush|आयुष|long life|S|b|calm,classic|soft
+Jai|जय|victory|S|b|strength,classic|strong
+Ravi|रवि|the sun|S|b|light,classic|soft
+Veer|वीर|brave|S|b|strength,classic|strong
+Aadhya|आद्या|the first power, primordial energy|S|g|strength,classic|soft
+Saanvi|सांवी|associated with the goddess Lakshmi|S|g|classic|soft
+Ira|इरा|the earth; the Vedic goddess of speech|S|g|nature,rare|soft
+Tara|तारा|star|S|g|sky,classic|soft
+Meera|मीरा|devotee; the poet-saint Mirabai|S|g|love,classic|soft
+Diya|दीया|a small lamp|S|g|light,classic|soft
+Sia|सिया|another name for Sita|S|g|light,rare|soft
+Aarna|अर्णा|the wave|S|g|water|soft
+Avni|अवनी|the earth|S|g|nature|soft
+Ishani|ईशानी|she who rules; a name of Parvati|S|g|strength|soft
+Anvi|अन्वी|one who follows, a seeker|S|g|nature,rare|soft
+Naina|नैना|eyes|S|g|love|soft
+Ananya|अनन्या|unique, matchless|S|g|classic|soft
+Aditi|अदिति|boundless; mother of the gods|S|g|sky,classic|soft
+Kavya|काव्या|poetry|S|g|wisdom,classic|soft
+Divya|दिव्या|divine|S|g|light,classic|soft
+Priya|प्रिया|beloved|S|g|love,classic|soft
+Lakshmi|लक्ष्मी|the goddess of wealth and prosperity|S|g|classic|soft
+Gauri|गौरी|fair, radiant; a name of Parvati|S|g|light,classic|soft
+Sita|सीता|furrow; the goddess of the Ramayana|S|g|nature,classic|soft
+Radha|राधा|devotion, success; consort of Krishna|S|g|love,classic|soft
+Uma|उमा|tranquility; a name of Parvati|S|g|calm,classic|soft
+Nandini|नन्दिनी|daughter who brings joy|S|g|love,rare|soft
+Shreya|श्रेया|auspicious, fortunate|S|g|classic|soft
+Vidya|विद्या|knowledge|S|g|wisdom,classic|soft
+Vedika|वेदिका|an altar; one connected to the Vedas|S|g|wisdom,rare|soft
+Amara|अमरा|immortal, eternal|S|g|rare|soft
+Isha|ईशा|protector; ruler|S|g|strength,classic|soft
+Riddhi|ऋद्धि|prosperity, growth|S|g|classic|soft
+Siddhi|सिद्धि|accomplishment, spiritual attainment|S|g|wisdom,rare|soft
+Aaradhya|आराध्या|worthy of worship|S|g|love,classic|soft
+Vaidehi|वैदेही|daughter of Videha; a name of Sita|S|g|classic,rare|soft
+Kripa|कृपा|grace, compassion|S|g|love,rare|soft
+Manasvi||intelligent, high-minded|S|g|wisdom,rare|soft
+Charvi||beautiful, graceful|S|g|love,rare|musical
+Kashvi||radiant, shining|S|g|light,rare|soft
+Reva|रेवा|the Narmada river|S|g|water,rare|soft
+Kiran|किरण|a ray of light|S|u|light,classic|soft
+Arya|आर्य|noble|S|u|classic|soft
+Vanya|वन्या|of the forest|S|u|nature,rare|soft
+Yuvan|युवान|ever young|S|u|rare|soft
+Leo||lion|G|b|strength,classic|strong
+Noah||rest, comfort|G|b|calm,classic|soft
+Eli||lifted up|G|b|classic|soft
+Milo||merciful; soldier|G|b|classic|soft
+Theo||a gift of God|G|b|classic|soft
+Ezra||help|G|b|classic,rare|strong
+Felix||lucky, happy|G|b|rare|strong
+Luca||bringer of light|G|b|light,classic|soft
+Jude||praised|G|b|classic|strong
+Rafael||God has healed|G|b|classic|musical
+Nico||victory of the people|G|b|classic|soft
+Hugo||mind, spirit|G|b|rare|strong
+Arlo||between two hills|G|b|nature,rare|soft
+Cyrus||the sun|G|b|light,rare|strong
+Kian||ancient; king|G|b|strength,classic|soft
+Juno||queen of the gods|G|g|strength,rare|soft
+Nova||a new star|G|g|sky,rare|soft
+Iris||rainbow|G|g|nature,classic|soft
+Luna||the moon|G|g|sky,classic|soft
+Maya||illusion; water|G|g|water,classic|soft
+Naomi||pleasantness|G|g|calm,classic|soft
+Sofia||wisdom|G|g|wisdom,classic|soft
+Elena||bright, shining|G|g|light,classic|musical
+Alma||soul|G|g|love,rare|soft
+Kiara||bright, clear|G|g|light|musical
+Rhea||flowing; mother of the gods|G|g|water,rare|soft
+Ziva||radiance|G|g|light,rare|soft
+Ada||noble|G|g|classic,rare|soft
+Ivy||the climbing vine|G|g|nature|soft
+Zara||blooming flower|G|g|nature|musical
+Aria||melody, air|G|g|classic|soft
+Wren||a small bird|G|u|nature,rare|strong
+Sage||wise; the herb|G|u|wisdom,nature|strong
+River||a river|G|u|water,nature|strong
+Rowan||the red-berried tree|G|u|nature|soft
+Quinn||wise, counsel|G|u|wisdom,rare|strong
+Sasha||defender|G|u|strength|musical
+Kai||the sea|G|u|water,rare|strong
+Nia||purpose; bright|G|u|rare|soft
+Abhinav|अभिनव|new, original|S|b|rare|soft
+Abhay|अभय|fearless|S|b|strength,rare|strong
+Amit|अमित|boundless, infinite|S|b|rare|soft
+Anand|आनंद|joy, bliss|S|b|calm,classic|soft
+Anil|अनिल|wind; the wind god|S|b|nature,rare|soft
+Ashok|अशोक|without sorrow; the emperor Ashoka|S|b|calm,classic|strong
+Bharat|भरत|the cherished one; the emperor Bharata|S|b|classic|strong
+Devansh|देवांश|a part of God|S|b|rare|strong
+Devesh|देवेश|lord of the gods|S|b|strength,rare|strong
+Deepak|दीपक|a lamp|S|b|light,classic|soft
+Ekansh|एकांश|a single, whole part|S|b|rare|soft
+Gagan|गगन|the sky|S|b|sky,rare|soft
+Gaurav|गौरव|pride, honor|S|b|classic|strong
+Kabir|कबीर|great; the mystic poet-saint Kabir|S|b|wisdom,classic|strong
+Kartik|कार्तिक|the deity Kartikeya|S|b|classic|strong
+Kishore|किशोर|youth|S|b|classic|soft
+Krish|कृष्|short form of Krishna|S|b|classic|strong
+Lakshay|लक्ष्य|aim, goal|S|b|rare|strong
+Manoj|मनोज|born of the mind; a name of Kama|S|b|love,classic|soft
+Mihir|मिहिर|the sun|S|b|light,rare|soft
+Mohit|मोहित|charmed, fascinated|S|b|love,rare|soft
+Nakul|नकुल|a mongoose; the Mahabharata's twin|S|b|classic|soft
+Narendra|नरेंद्र|lord of men|S|b|strength,classic|strong
+Nitin|नितिन|master of right conduct|S|b|wisdom,classic|soft
+Omkar|ओंकार|the sound and form of Om|S|b|calm,rare|strong
+Pankaj|पंकज|born of mud; the lotus|S|b|nature,classic|strong
+Parth|पार्थ|another name for Arjun|S|b|classic|strong
+Prateek|प्रतीक|symbol|S|b|rare|strong
+Pranay|प्रणय|love, affection|S|b|love,rare|soft
+Pravin|प्रवीण|skilled, proficient|S|b|wisdom,rare|soft
+Raghu|रघु|an ancestor of Rama|S|b|classic|strong
+Rajesh|राजेश|king of kings|S|b|strength,classic|strong
+Rakesh|राकेश|lord of the full moon|S|b|sky,classic|strong
+Rishabh|ऋषभ|the best; a bull|S|b|strength,rare|strong
+Rishi|ऋषि|a sage|S|b|wisdom,classic|soft
+Sanjay|संजय|triumphant, victorious|S|b|strength,classic|strong
+Sarthak|सार्थक|meaningful|S|b|wisdom,rare|strong
+Saurabh|सौरभ|fragrance|S|b|nature,classic|strong
+Shantanu|शान्तनु|peaceful; a Mahabharata king|S|b|calm,classic|soft
+Shashank|शशांक|the moon|S|b|sky,rare|strong
+Sundar|सुंदर|beautiful|S|b|love,classic|strong
+Suraj|सूरज|the sun|S|b|light,classic|strong
+Tarun|तरुण|young|S|b|classic|strong
+Uday|उदय|rising, sunrise|S|b|light,classic|soft
+Udit|उदित|risen, illuminated|S|b|light,rare|soft
+Ujjwal|उज्ज्वल|bright, brilliant|S|b|light,rare|strong
+Utkarsh|उत्कर्ष|excellence|S|b|wisdom,rare|strong
+Vikram|विक्रम|valor|S|b|strength,classic|strong
+Vinay|विनय|humility, good conduct|S|b|wisdom,classic|soft
+Vipul|विपुल|abundant|S|b|rare|strong
+Yogesh|योगेश|lord of yoga|S|b|wisdom,classic|soft
+Yuvraj|युवराज|crown prince|S|b|strength,classic|strong
+Aishwarya|ऐश्वर्या|prosperity, splendor|S|g|classic|musical
+Akshara|अक्षरा|a letter; imperishable|S|g|wisdom,rare|soft
+Amrita|अमृता|immortal, nectar|S|g|rare|soft
+Anjali|अंजलि|an offering with cupped hands|S|g|love,classic|soft
+Arpita|अर्पिता|dedicated, offered|S|g|love,rare|soft
+Bhavya|भव्या|grand, magnificent|S|g|classic|strong
+Chandni|चांदनी|moonlight|S|g|sky,classic|musical
+Chitra|चित्रा|a picture; a star|S|g|sky,classic|soft
+Deepika|दीपिका|a small lamp|S|g|light,classic|soft
+Devika|देविका|little goddess|S|g|strength,rare|soft
+Esha|एषा|desire, wish|S|g|love,rare|soft
+Gargi|गार्गी|a Vedic female philosopher|S|g|wisdom,rare|strong
+Hema|हेमा|golden|S|g|classic|soft
+Indira|इंदिरा|beauty; a name of Lakshmi|S|g|classic|soft
+Jaya|जया|victory|S|g|strength,classic|soft
+Jyoti|ज्योति|light, flame|S|g|light,classic|soft
+Kalyani|कल्याणी|auspicious|S|g|calm,rare|musical
+Kanika|कणिका|a small particle|S|g|rare|soft
+Komal|कोमल|soft, delicate|S|g|calm,classic|soft
+Lavanya|लावण्या|grace, beauty|S|g|love,classic|musical
+Madhuri|मधुरी|sweetness|S|g|love,classic|musical
+Malini|मालिनी|fragrant; a garland-maker|S|g|nature,rare|soft
+Manisha|मनीषा|wisdom, intellect|S|g|wisdom,classic|soft
+Neha|नेहा|love, affection|S|g|love,classic|soft
+Nisha|निशा|night|S|g|calm,classic|soft
+Pallavi|पल्लवी|a young blossom|S|g|nature,classic|musical
+Pooja|पूजा|worship|S|g|classic|soft
+Pragya|प्रज्ञा|wisdom, intelligence|S|g|wisdom,rare|strong
+Rachna|रचना|creation|S|g|rare|soft
+Rani|रानी|queen|S|g|strength,classic|soft
+Rekha|रेखा|a line|S|g|classic|soft
+Ruchi|रुचि|liking, delight|S|g|love,classic|soft
+Sarika|सारिका|a myna bird|S|g|nature,rare|soft
+Shanti|शांति|peace|S|g|calm,classic|soft
+Shobha|शोभा|splendor, beauty|S|g|classic|soft
+Sneha|स्नेहा|love, affection|S|g|love,classic|soft
+Sunita|सुनीता|well-conducted, virtuous|S|g|classic|soft
+Swati|स्वाति|a star; independence|S|g|sky,classic|musical
+Tanvi|तन्वी|slender, delicate|S|g|classic|soft
+Urvi|उर्वी|the earth|S|g|nature,rare|soft
+Urmila|उर्मिला|full of waves|S|g|water,classic|soft
+Vandana|वंदना|worship, salutation|S|g|classic|soft
+Varsha|वर्षा|rain|S|g|water,classic|strong
+Yamini|यामिनी|the night|S|g|calm,rare|musical
+Chandra|चंद्र|the moon|S|u|sky,classic|soft
+Ethan||strong, firm|G|b|strength,classic|strong
+Elias||the Lord is my God|G|b|classic|soft
+Ellis||benevolent|G|b|rare|soft
+Freya||a Norse goddess of love|G|g|love,rare|musical
+Finn||fair, white|G|b|classic|strong
+Faye||fairy|G|g|rare|soft
+Flora||flower|G|g|nature,classic|soft
+Grace||grace|G|g|classic|soft
+Greta||pearl|G|g|classic|strong
+Gabriel||God is my strength|G|b|strength,classic|musical
+Holly||the holly tree|G|g|nature,classic|soft
+Ian||God is gracious|G|b|classic|soft
+Ivan||God is gracious|G|b|classic|strong
+Jasper||a treasurer; a gemstone|G|b|rare|strong
+Jack||God is gracious|G|b|classic|strong
+Keira||dark-haired|G|g|rare|strong
+Liam||strong-willed warrior|G|b|strength,classic|soft
+Lucy||light|G|g|light,classic|soft
+Mabel||lovable|G|g|love,rare|soft
+Nora||honor|G|g|classic|soft
+Nolan||champion|G|b|strength,rare|strong
+Oscar||spear of the gods|G|b|strength,classic|strong
+Olive||the olive tree, peace|G|g|calm,classic|soft
+Penelope||weaver|G|g|classic|musical
+Percy||one who pierces the valley|G|b|rare|strong
+Queenie||queen|G|g|strength,rare|musical
+Ruby||the gem|G|g|classic|strong
+Roman||of Rome|G|b|classic|strong
+Stella||star|G|g|sky,classic|strong
+Silas||of the forest|G|b|nature,rare|strong
+Tobias||God is good|G|b|classic|musical
+Toby||God is good|G|b|classic|soft
+Ulysses||wrathful; the epic hero|G|b|strength,rare|strong
+Uriel||God is my light|G|b|light,rare|strong
+Violet||the violet flower|G|g|nature,classic|soft
+Vincent||conquering|G|b|strength,classic|strong
+Willow||the willow tree|G|u|nature,classic|soft
+Wyatt||brave in war|G|b|strength,classic|strong
+Xavier||new house; bright|G|b|light,rare|strong
+Ximena||one who listens|G|g|wisdom,rare|soft
+Yara||small butterfly|G|g|nature,rare|musical
+Zane||God is gracious|G|b|classic|strong
+Zoe||life|G|g|classic|soft
+Zion||the highest point|G|u|sky,rare|strong
+Aadesh|आदेश|command, instruction|S|b|rare|soft
+Abeer|अबीर|fragrance; festival colour|S|b|nature,rare|soft
+Abhijit|अभिजित|victorious; a bright star|S|b|sky,classic|strong
+Abhiram|अभिराम|pleasing, delightful|S|b|love,rare|soft
+Abhishek|अभिषेक|ritual anointing|S|b|classic|strong
+Achyut|अच्युत|imperishable; a name of Vishnu|S|b|classic|strong
+Adarsh|आदर्श|ideal, principled|S|b|wisdom,classic|strong
+Advik|अद्विक|unique|S|b|rare|soft
+Agastya|अगस्त्य|a revered Vedic sage|S|b|wisdom,rare|strong
+Ajay|अजय|unconquerable|S|b|strength,classic|soft
+Ajit|अजित|invincible|S|b|strength,classic|strong
+Akhil|अखिल|complete, whole|S|b|classic|soft
+Akshat|अक्षत|unbroken, whole|S|b|rare|strong
+Akshay|अक्षय|indestructible, eternal|S|b|strength,classic|strong
+Alok|आलोक|light, radiance|S|b|light,classic|soft
+Aman|अमन|peace|S|b|calm,classic|soft
+Ambar|अंबर|the sky|S|b|sky,rare|soft
+Ambuj|अंबुज|born of water; the lotus|S|b|water,nature|strong
+Amey|अमेय|immeasurable|S|b|rare|soft
+Amogh|अमोघ|unerring, infallible|S|b|strength,rare|strong
+Amrit|अमृत|nectar of immortality|S|b|classic|soft
+Anerudh|अनिरुद्ध|unstoppable; Krishna's grandson|S|b|strength,classic|soft
+Aniket|अनिकेत|one without a home; a wanderer|S|b|rare|soft
+Anish|अनीश|supreme, without a master|S|b|strength,rare|soft
+Ankit|अंकित|marked, distinguished|S|b|classic|strong
+Ankur|अंकुर|a sprout, new growth|S|b|nature,classic|soft
+Anmol|अनमोल|priceless|S|b|love,classic|soft
+Anshul|अंशुल|radiant, bright|S|b|light,rare|soft
+Anup|अनूप|incomparable|S|b|rare|soft
+Anurag|अनुराग|deep affection|S|b|love,classic|soft
+Apurva|अपूर्व|unprecedented, unique|S|b|rare|soft
+Arihant|अरिहंत|conqueror of one's enemies|S|b|strength,rare|strong
+Arindam|अरिंदम|destroyer of foes|S|b|strength,rare|strong
+Arpit|अर्पित|offered, dedicated|S|b|love,rare|soft
+Arun|अरुण|the reddish glow of dawn|S|b|light,classic|soft
+Aryaman|अर्यमन्|a solar deity; noble friend|S|b|light,rare|strong
+Ashish|आशीष|a blessing|S|b|classic|soft
+Ashwin|अश्विन|a horseman; the Vedic twin healers|S|b|classic|strong
+Atul|अतुल|matchless|S|b|strength,classic|soft
+Avinash|अविनाश|indestructible|S|b|strength,classic|soft
+Ayan|अयन|a path, a course|S|b|rare|soft
+Aatreya|आत्रेय|of the sage Atri's lineage|S|b|wisdom,rare|musical
+Aakriti|आकृति|form, shape|S|g|rare|soft
+Aarohi|आरोही|the ascending musical scale|S|g|classic|musical
+Aarti|आरती|the ritual of light in worship|S|g|light,classic|soft
+Abha|आभा|glow, splendour|S|g|light,rare|soft
+Achala|अचला|steady; the earth|S|g|nature,rare|soft
+Advika|अद्विका|unique|S|g|rare|soft
+Ahalya|अहल्या|a sage's wife in the Ramayana|S|g|classic,rare|soft
+Ahana|अहाना|the first light of dawn|S|g|light|soft
+Akanksha|आकांक्षा|desire, aspiration|S|g|classic|musical
+Alka|अलका|a lock of hair; a mythical city|S|g|classic|soft
+Amala|अमला|pure, spotless|S|g|calm,rare|soft
+Amba|अंबा|mother; a name of Durga|S|g|strength,classic|soft
+Ambika|अंबिका|mother; a name of Parvati|S|g|strength,classic|soft
+Amisha|अमीषा|honest, guileless|S|g|rare|soft
+Anagha|अनघा|sinless, pure|S|g|calm,rare|soft
+Anamika|अनामिका|the ring finger; the nameless one|S|g|rare|soft
+Anandi|आनंदी|joyful|S|g|calm,rare|soft
+Ananta|अनंत|infinite, endless|S|u|sky,classic|soft
+Anika|अनिका|grace; a name of Durga|S|g|strength,classic|soft
+Anita|अनीता|one who is well guided|S|g|classic|soft
+Anjana|अंजना|mother of Hanuman|S|g|classic|soft
+Ankita|अंकिता|marked, distinguished|S|g|classic|soft
+Annapurna|अन्नपूर्णा|the goddess of nourishment|S|g|classic|musical
+Anshika|अंशिका|a small portion|S|g|rare|soft
+Anuja|अनुजा|younger sister|S|g|love,rare|soft
+Anupama|अनुपमा|incomparable|S|g|classic|musical
+Anuradha|अनुराधा|a nakshatra; propitious|S|g|sky,classic|musical
+Aparna|अपर्णा|leafless; a name of Parvati|S|g|nature,classic|soft
+Apeksha|अपेक्षा|expectation|S|g|rare|soft
+Aradhana|आराधना|worship|S|g|love,classic|musical
+Archana|अर्चना|worship, an offering|S|g|classic|musical
+Aruna|अरुणा|the red glow of dawn|S|g|light,classic|soft
+Arundhati|अरुंधती|a star; the sage Vasishtha's wife|S|g|sky,classic|musical
+Asha|आशा|hope|S|g|calm,classic|soft
+Ashwini|अश्विनी|the first nakshatra|S|g|sky,classic|soft
+Astha|आस्था|faith|S|g|calm,rare|strong
+Avantika|अवंतिका|the city of Ujjain; a princess|S|g|classic|musical
+Ayushi|आयुषी|one blessed with long life|S|g|calm,rare|soft
+Aaron||exalted; a mountain of strength|G|b|strength,classic|soft
+Abel||breath|G|b|classic|soft
+Abigail||my father's joy|G|g|classic|musical
+Adam||man; of the earth|G|b|nature,classic|strong
+Adrian||from Hadria|G|b|classic|soft
+Aiden||little fire|G|b|light,classic|soft
+Alan||handsome; harmony|G|b|classic|soft
+Albert||noble and bright|G|b|light,classic|strong
+Alexander||defender of the people|G|b|strength,classic|musical
+Alice||noble|G|g|classic|soft
+Amelia||industrious|G|g|classic|musical
+Andrea||brave|G|u|classic|musical
+Angela||a messenger|G|g|classic|musical
+Anna||grace|G|g|classic|soft
+Annabel||loving, graceful|G|g|love,classic|musical
+Anthony||priceless|G|b|classic|musical
+April||opening; the spring|G|g|nature,classic|soft
+Archer||a bowman|G|b|rare|strong
+Ariel||lion of God|G|u|strength,rare|musical
+Arthur||bear; noble|G|b|strength,classic|strong
+Astrid||divinely beautiful|G|g|love,rare|strong
+Aubrey||ruler of elves|G|u|rare|soft
+August||great, venerable|G|b|classic|strong
+Aurora||the dawn|G|g|light,classic|musical
+Ava||life; a bird|G|g|classic|soft
+Axel||father of peace|G|b|calm,rare|strong
+Ayla||moonlight|G|g|sky,rare|soft
+Balaji|बालाजी|a name of Vishnu at Tirupati|S|b|classic|musical
+Balram|बलराम|Krishna's strong elder brother|S|b|strength,classic|strong
+Basant|बसंत|the spring|S|b|nature,classic|strong
+Bhanu|भानु|the sun|S|b|light,classic|soft
+Bhargav|भार्गव|of the sage Bhrigu; a name of Shiva|S|b|wisdom,rare|strong
+Bhaskar|भास्कर|the sun, the light-maker|S|b|light,classic|strong
+Bhavesh|भावेश|lord of emotions|S|b|love,rare|strong
+Bhavik|भाविक|devoted, full of feeling|S|b|love,rare|soft
+Bhupendra|भूपेंद्र|king of the earth|S|b|strength,classic|strong
+Bhuvan|भुवन|the world|S|b|classic|soft
+Bipin|बिपिन|a forest|S|b|nature,classic|soft
+Bodhi|बोधि|awakening, enlightenment|S|u|wisdom,rare|soft
+Brij|ब्रज|Krishna's homeland|S|b|classic|strong
+Barkha|बरखा|the rain|S|g|water,classic|soft
+Bela|बेला|the jasmine flower; a moment|S|g|nature,rare|soft
+Bhakti|भक्ति|devotion|S|g|love,classic|soft
+Bhavani|भवानी|a name of Parvati|S|g|strength,classic|musical
+Bhavna|भावना|feeling, emotion|S|g|love,classic|soft
+Bhoomi|भूमि|the earth|S|g|nature,classic|soft
+Bhumika|भूमिका|the earth; a role to play|S|g|nature,rare|musical
+Bindu|बिंदु|a dot; a drop|S|g|rare|soft
+Brinda|बृंदा|the holy basil; a name of Radha|S|g|nature,classic|soft
+Bailey||a steward|G|u|rare|soft
+Basil||royal, kingly|G|b|classic|soft
+Beatrice||she who brings joy|G|g|classic|musical
+Beau||handsome|G|b|love,rare|soft
+Beckett||a small stream|G|b|water,rare|strong
+Bella||beautiful|G|g|love,classic|soft
+Benjamin||son of the right hand|G|b|classic|musical
+Bianca||white, pure|G|g|classic|musical
+Blair||a plain, a field|G|u|nature,rare|strong
+Blake||dark; or pale|G|u|rare|strong
+Bonnie||pretty, cheerful|G|g|love,rare|soft
+Boris||a fighter|G|b|strength,rare|strong
+Brian||noble, strong|G|b|strength,classic|strong
+Bridget||strength, the exalted one|G|g|strength,classic|soft
+Brody||a second son|G|b|rare|soft
+Brooke||a small stream|G|g|water,nature|strong
+Bruce||from the brushwood|G|b|classic|strong
+Bruno||brown|G|b|rare|strong
+Byron||at the cowsheds|G|b|rare|soft
+Chaman|चमन|a garden|S|b|nature,rare|soft
+Chandan|चंदन|sandalwood|S|b|nature,classic|soft
+Chandrakant|चंद्रकांत|beloved of the moon; the moonstone|S|b|sky,classic|strong
+Chandresh|चंद्रेश|lord of the moon|S|b|sky,rare|strong
+Chetan|चेतन|consciousness, alive|S|b|wisdom,classic|strong
+Chinmay|चिन्मय|full of consciousness|S|b|wisdom,rare|soft
+Chirag|चिराग|a lamp|S|b|light,classic|soft
+Chaitali|चैताली|born in the month of Chaitra|S|g|rare|musical
+Champa|चंपा|the champak flower|S|g|nature,classic|soft
+Chandrika|चंद्रिका|moonlight|S|g|sky,classic|musical
+Charu|चारु|beautiful|S|g|love,classic|soft
+Charulata|चारुलता|a beautiful vine|S|g|nature,rare|musical
+Chetana|चेतना|consciousness|S|g|wisdom,rare|musical
+Chhaya|छाया|shade, a shadow|S|g|calm,classic|soft
+Chitrangada|चित्रांगदा|a princess of the Mahabharata|S|g|classic,rare|musical
+Caleb||whole-hearted, faithful|G|b|classic|strong
+Callum||a dove|G|b|calm,rare|soft
+Cameron||crooked nose; a Scottish clan|G|u|classic|soft
+Camila||attendant at a ritual|G|g|classic|musical
+Carmen||a song|G|g|classic|musical
+Caroline||free|G|g|classic|musical
+Carter||one who carts goods|G|b|classic|strong
+Catherine||pure|G|g|classic|musical
+Cecilia||blind; the patron of music|G|g|classic|musical
+Cedric||a Welsh-rooted literary name|G|b|rare|strong
+Celeste||heavenly|G|g|sky,rare|musical
+Charles||free man|G|b|classic|strong
+Charlotte||free|G|g|classic|musical
+Chase||a hunter|G|b|rare|strong
+Chloe||a green shoot|G|g|nature,classic|soft
+Claire||clear, bright|G|g|light,classic|soft
+Clara||bright, clear|G|g|light,classic|soft
+Clark||a scholar, a scribe|G|b|wisdom,rare|strong
+Cleo||glory|G|u|rare|soft
+Colin||a young pup; a dove|G|b|classic|soft
+Connor||lover of hounds|G|b|classic|strong
+Constance||steadfast|G|g|calm,rare|musical
+Cooper||a barrel-maker|G|b|rare|strong
+Cora||a maiden|G|g|classic|soft
+Craig||a rock|G|b|strength,rare|strong
+Daksh|दक्ष|able, skilled; a Prajapati|S|b|strength,rare|strong
+Darsh|दर्श|sight, vision|S|b|rare|strong
+Dev|देव|divine, a god|S|b|classic|strong
+Devraj|देवराज|king of the gods|S|b|strength,classic|strong
+Dhairya|धैर्य|patience, steady courage|S|b|calm,rare|musical
+Dhanush|धनुष|a bow|S|b|strength,rare|strong
+Dilip|दिलीप|an ancestor of Rama|S|b|classic|soft
+Dinesh|दिनेश|lord of the day; the sun|S|b|light,classic|strong
+Divit|दिवित|immortal|S|b|rare|soft
+Damayanti|दमयंती|a princess of the Mahabharata|S|g|classic,rare|musical
+Damini|दामिनी|lightning|S|g|sky,rare|musical
+Darshana|दर्शना|vision; a school of philosophy|S|g|wisdom,classic|musical
+Daya|दया|compassion|S|g|love,classic|soft
+Deepa|दीपा|a lamp|S|g|light,classic|soft
+Devanshi|देवांशी|a part of the divine|S|g|rare|musical
+Devi|देवी|goddess|S|g|strength,classic|soft
+Devyani|देवयानी|a sage's daughter|S|g|classic,rare|musical
+Dhara|धारा|a stream, a flow|S|g|water,classic|soft
+Dhriti|धृति|steadiness, courage|S|g|strength,rare|soft
+Dhruvi|ध्रुवी|firm, constant|S|g|rare|soft
+Diksha|दीक्षा|initiation, dedication|S|g|wisdom,classic|soft
+Dipti|दीप्ति|radiance|S|g|light,classic|soft
+Disha|दिशा|a direction|S|g|rare|soft
+Drishti|दृष्टि|sight, vision|S|g|rare|strong
+Durga|दुर्गा|the invincible goddess|S|g|strength,classic|soft
+Daisy||the day's eye, a flower|G|g|nature,classic|soft
+Dahlia||the flower|G|g|nature,rare|musical
+Daniel||God is my judge|G|b|classic|musical
+David||beloved|G|b|love,classic|strong
+Dean||a valley|G|b|nature,rare|strong
+Declan||full of goodness|G|b|rare|strong
+Delilah||delicate|G|g|classic|musical
+Desmond||from South Munster|G|b|rare|strong
+Diana||divine; goddess of the hunt|G|g|classic|musical
+Diego||the supplanter|G|b|classic|soft
+Dominic||belonging to the Lord|G|b|classic|musical
+Dorothy||a gift of God|G|g|classic|musical
+Douglas||dark water|G|b|water,classic|strong
+Duncan||dark warrior|G|b|strength,rare|strong
+Dylan||son of the sea|G|b|water,classic|soft
+Ekalavya|एकलव्य|the devoted self-taught archer|S|b|strength,rare|musical
+Eshwar|ईश्वर|the supreme lord|S|b|classic|strong
+Ekta|एकता|unity|S|g|calm,classic|soft
+Ela|एला|cardamom; the earth|S|g|nature,rare|soft
+Eshita|एषिता|one who desires|S|g|rare|musical
+Edward||a wealthy guardian|G|b|classic|strong
+Edwin||a prosperous friend|G|b|classic|soft
+Eleanor||shining light|G|g|light,classic|musical
+Elise||God is my oath|G|g|classic|soft
+Ella||all, completely; a fairy maiden|G|g|classic|soft
+Elliot||the Lord is my God|G|b|classic|soft
+Eloise||healthy, wide|G|g|classic|musical
+Elsie||God is my oath|G|g|classic|soft
+Emily||a rival; industrious|G|g|classic|musical
+Emma||whole, universal|G|g|classic|soft
+Emmanuel||God is with us|G|b|classic|musical
+Emmett||universal, whole|G|b|rare|strong
+Erica||eternal ruler|G|g|strength,classic|soft
+Erik||eternal ruler|G|b|strength,classic|strong
+Ernest||serious, resolute|G|b|rare|strong
+Esme||esteemed, beloved|G|g|love,rare|soft
+Estelle||a star|G|g|sky,classic|musical
+Esther||a star|G|g|sky,classic|strong
+Eugene||well-born|G|b|classic|soft
+Eva||life|G|g|classic|soft
+Evan||the Lord is gracious|G|b|classic|soft
+Evelyn||wished-for child|G|g|love,classic|musical
+Everett||brave as a wild boar|G|b|strength,rare|strong
+Falguni|फाल्गुनी|born in the month of Phalguna|S|g|rare|musical
+Fabian||a bean grower|G|b|rare|soft
+Faith||trust, belief|G|g|calm,classic|strong
+Fern||the woodland plant|G|g|nature,rare|strong
+Finley||a fair-haired warrior|G|u|classic|soft
+Fletcher||an arrow-maker|G|b|rare|strong
+Florence||blossoming, flourishing|G|g|nature,classic|musical
+Floyd||grey-haired|G|b|rare|strong
+Forrest||of the woods|G|b|nature,rare|strong
+Frances||free|G|g|classic|musical
+Francis||free|G|b|classic|musical
+Frank||free|G|b|classic|strong
+Frederick||peaceful ruler|G|b|calm,classic|strong
+Ganesh|गणेश|the elephant-headed remover of obstacles|S|b|classic|strong
+Gaurang|गौरांग|fair-complexioned|S|b|rare|strong
+Gautam|गौतम|a great sage; the Buddha's clan|S|b|wisdom,classic|soft
+Gopal|गोपाल|the cowherd; a name of Krishna|S|b|classic|soft
+Govind|गोविंद|a name of Krishna|S|b|classic|strong
+Garima|गरिमा|warmth, dignity|S|g|classic|musical
+Gayatri|गायत्री|a sacred Vedic metre and mantra|S|g|wisdom,classic|musical
+Geeta|गीता|a song; the Bhagavad Gita|S|g|wisdom,classic|soft
+Girija|गिरिजा|born of the mountain; Parvati|S|g|nature,classic|musical
+Gitanjali|गीतांजलि|an offering of songs|S|g|love,rare|musical
+Gopika|गोपिका|a cowherd girl, Krishna's companion|S|g|classic|musical
+Grishma|ग्रीष्म|the summer|S|g|nature,rare|soft
+Gulab|गुलाब|the rose|S|u|nature,rare|soft
+Gunjan|गुंजन|the humming of a bee|S|u|nature,rare|soft
+Gabriella||God is my strength|G|g|strength,classic|musical
+Garrett||mighty with a spear|G|b|strength,rare|strong
+Gavin||a white hawk|G|b|nature,classic|soft
+Gemma||a gem|G|g|classic|soft
+Genevieve||of the tribe of women|G|g|classic|musical
+George||a farmer, worker of the earth|G|b|nature,classic|soft
+Georgia||a farmer, worker of the earth|G|g|nature,classic|musical
+Gia||God is gracious|G|g|rare|soft
+Gideon||a mighty warrior|G|b|strength,rare|soft
+Giselle||a pledge|G|g|rare|musical
+Gloria||glory|G|g|classic|musical
+Graham||a gravelly homestead|G|b|classic|strong
+Grant||great, tall|G|b|strength,rare|strong
+Gregory||watchful, alert|G|b|classic|musical
+Griffin||a strong lord; the mythic beast|G|b|strength,rare|strong
+Gwen||white, blessed|G|g|rare|strong
+Hardik|हार्दिक|heartfelt|S|b|love,classic|strong
+Hari|हरि|a name of Vishnu; tawny|S|b|classic|soft
+Harish|हरीश|lord Hari; a name of Vishnu|S|b|classic|strong
+Hemant|हेमंत|the early winter|S|b|nature,classic|strong
+Himanshu|हिमांशु|the cool-rayed one; the moon|S|b|sky,classic|musical
+Hitesh|हितेश|one who wishes others well|S|b|love,rare|strong
+Hansa|हंसा|a swan|S|g|nature,classic|soft
+Hansika|हंसिका|a little swan|S|g|nature,rare|musical
+Harini|हरिणी|a doe|S|g|nature,rare|musical
+Harsha|हर्षा|joy, delight|S|g|calm,classic|soft
+Hetal|हेतल|friendly, affectionate|S|g|love,rare|soft
+Hima|हिमा|snow|S|g|nature,rare|soft
+Himani|हिमानी|snow; a name of Parvati|S|g|nature,classic|musical
+Hiral|हीरल|lustrous|S|g|rare|soft
+Hannah||grace, favour|G|g|classic|soft
+Harper||a harp player|G|u|classic|strong
+Harrison||son of Harry|G|b|classic|strong
+Harvey||battle-worthy|G|b|rare|strong
+Hayden||the hay valley|G|u|rare|soft
+Hazel||the hazel tree|G|g|nature,classic|soft
+Heath||an open moorland|G|b|nature,rare|strong
+Hector||holding fast; the Trojan hero|G|b|strength,classic|strong
+Heidi||noble, serene|G|g|calm,classic|soft
+Helen||bright, shining|G|g|light,classic|soft
+Helena||bright, shining|G|g|light,classic|musical
+Henry||ruler of the home|G|b|classic|soft
+Hope||hope|G|g|calm,classic|strong
+Howard||a guardian|G|b|classic|strong
+Hudson||son of Hugh|G|b|classic|strong
+Hunter||one who hunts|G|b|strength,classic|strong
+Indra|इंद्र|king of the gods|S|b|strength,classic|strong
+Ishwar|ईश्वर|the supreme lord|S|b|classic|strong
+Ila|इला|the earth; a Vedic goddess|S|g|nature,rare|soft
+Indrani|इंद्राणी|consort of Indra|S|g|strength,classic|musical
+Indu|इंदु|the moon|S|g|sky,classic|soft
+Ipsita|ईप्सिता|desired, cherished|S|g|love,rare|musical
+Ishita|इशिता|mastery; one who desires|S|g|strength,classic|soft
+Ishwari|ईश्वरी|the supreme goddess|S|g|strength,rare|musical
+Ida||industrious one|G|g|classic|soft
+Ilana||a tree|G|g|nature,rare|musical
+Imogen||maiden|G|g|rare|musical
+Ines||pure|G|g|classic,rare|soft
+Ingrid||beautiful; a Norse fertility god|G|g|classic|strong
+Iona||an island of the Hebrides|G|g|nature,rare|musical
+Irene||peace|G|g|calm,classic|musical
+Isaac||he will laugh|G|b|classic|soft
+Isabella||devoted to God|G|g|classic|musical
+Isadora||a gift of Isis|G|g|rare|musical
+Isaiah||salvation of the Lord|G|b|classic|musical
+Isla||an island; a Scottish river|G|g|nature,classic|soft
+Israel||one who wrestles with God|G|b|rare|musical
+Ivory||the pale, precious material|G|u|rare|musical
+Jagdish|जगदीश|lord of the universe|S|b|classic|strong
+Jalaj|जलज|born of water; the lotus|S|b|water,nature|strong
+Janak|जनक|a father; the king who raised Sita|S|b|classic|strong
+Jatin|जतिन|one with matted hair; an ascetic|S|b|wisdom,classic|soft
+Jayant|जयंत|victorious|S|b|strength,classic|strong
+Jayesh|जयेश|lord of victory|S|b|strength,classic|strong
+Jeevan|जीवन|life|S|b|classic|soft
+Jitendra|जितेंद्र|one who has conquered his senses|S|b|strength,classic|strong
+Jagruti|जागृति|an awakening|S|g|wisdom,rare|musical
+Janhavi|जान्हवी|the river Ganga|S|g|water,classic|musical
+Jayanti|जयंती|victorious; a celebration|S|g|strength,classic|musical
+Juhi|जूही|the jasmine flower|S|g|nature,classic|soft
+Jacob||the supplanter|G|b|classic|soft
+James||the supplanter|G|b|classic|strong
+Jane||God is gracious|G|g|classic|soft
+Jared||one who descends|G|b|rare|soft
+Jasmine||the jasmine flower|G|g|nature,classic|musical
+Jay||a bird; victory|G|b|nature,classic|strong
+Jayden||thankful|G|u|rare|soft
+Jenna||fair, white|G|g|rare|soft
+Jennifer||white wave, fair|G|g|classic|musical
+Jeremy||appointed by God|G|b|classic|musical
+Jesse||a gift|G|b|classic|soft
+Jessica||one who beholds|G|g|classic|musical
+Joanna||God is gracious|G|g|classic|musical
+Jocelyn||a member of the Gauts tribe|G|g|rare|musical
+Joel||the Lord is God|G|b|classic|soft
+John||God is gracious|G|b|classic|strong
+Jonah||a dove|G|b|calm,classic|soft
+Jonathan||a gift of God|G|b|classic|musical
+Jordan||one who descends; the river|G|u|water,classic|soft
+Joseph||the Lord will add|G|b|classic|musical
+Josephine||the Lord will add|G|g|classic|musical
+Joshua||the Lord is salvation|G|b|classic|musical
+Joy||joy, delight|G|g|calm,classic|strong
+Julia||youthful|G|g|classic|musical
+Julian||youthful|G|b|classic|musical
+Juliet||youthful|G|g|classic|musical
+June||young; the month|G|g|classic|soft
+Justin||just, fair|G|b|classic|strong
+Kailash|कैलाश|Shiva's sacred mountain|S|b|nature,classic|strong
+Kalyan|कल्याण|welfare, auspiciousness|S|b|calm,classic|strong
+Kamal|कमल|the lotus|S|b|nature,classic|soft
+Kanha|कान्हा|an affectionate name for Krishna|S|b|love,classic|soft
+Kanishk|कनिष्क|a Kushan emperor|S|b|rare|strong
+Karan|कर्ण|the Mahabharata warrior born with armour|S|b|strength,classic|strong
+Kaustubh|कौस्तुभ|the jewel on Vishnu's chest|S|b|rare|strong
+Kedar|केदार|a mountain field; a name of Shiva|S|b|nature,classic|strong
+Ketan|केतन|a home; a banner|S|b|classic|soft
+Kishan|किशन|a name of Krishna|S|b|classic|soft
+Kumar|कुमार|a young prince|S|b|classic|strong
+Kush|कुश|sacred grass; a son of Rama|S|b|nature,classic|strong
+Kushal|कुशल|skilful; in good health|S|b|wisdom,classic|soft
+Kadambari|कादंबरी|the heroine of a classical Sanskrit novel|S|g|classic,rare|musical
+Kajal|काजल|kohl for the eyes|S|g|classic|soft
+Kalpana|कल्पना|imagination|S|g|classic|musical
+Kamala|कमला|the lotus; a name of Lakshmi|S|g|nature,classic|soft
+Kamini|कामिनी|a beautiful, desirable woman|S|g|love,classic|musical
+Kanchan|कंचन|gold|S|g|classic|soft
+Kanti|कांति|radiance, beauty|S|g|light,classic|soft
+Karuna|करुणा|compassion|S|g|love,classic|musical
+Kaveri|कावेरी|the sacred southern river|S|g|water,classic|musical
+Kavita|कविता|a poem|S|g|wisdom,classic|musical
+Ketaki|केतकी|a fragrant screwpine flower|S|g|nature,rare|musical
+Khushi|खुशी|happiness|S|g|calm,classic|soft
+Kirti|कीर्ति|fame, glory|S|g|classic|soft
+Kokila|कोकिला|the cuckoo|S|g|nature,classic|musical
+Kumud|कुमुद|the night-blooming lotus|S|u|nature,rare|soft
+Kusum|कुसुम|a flower|S|g|nature,classic|soft
+Kara||beloved; dear|G|g|love,rare|soft
+Karen||pure|G|g|classic|soft
+Karl||a free man|G|b|classic|strong
+Kate||pure|G|g|classic|strong
+Katherine||pure|G|g|classic|musical
+Kayla||slender; pure|G|g|rare|soft
+Keith||a wood, a forest|G|b|nature,classic|strong
+Kendall||the valley of the Kent|G|u|rare|strong
+Kennedy||helmeted chief|G|u|classic|musical
+Kenneth||handsome; born of fire|G|b|classic|strong
+Kevin||handsome at birth|G|b|classic|soft
+Killian||strife; a little church|G|b|rare|strong
+Kimberly||from the royal meadow|G|g|classic|musical
+Kirsten||a follower of Christ|G|g|classic|strong
+Knox||a round hill|G|b|rare|strong
+Kurt||a courteous counsellor|G|b|rare|strong
+Kyle||a narrow strait|G|b|water,classic|strong
+Lakshman|लक्ष्मण|Rama's devoted brother|S|b|classic|strong
+Lalit|ललित|graceful, lovely|S|b|love,classic|soft
+Lav|लव|a son of Rama; a small part|S|b|classic|strong
+Lochan|लोचन|the eye|S|b|rare|soft
+Lokesh|लोकेश|lord of the world|S|b|strength,classic|strong
+Lakshita|लक्षिता|distinguished, marked out|S|g|rare|musical
+Lalita|ललिता|graceful; a name of Parvati|S|g|love,classic|musical
+Latika|लतिका|a small vine|S|g|nature,rare|musical
+Leela|लीला|divine play|S|g|calm,classic|soft
+Lipika|लिपिका|a short letter, writing|S|g|wisdom,rare|musical
+Lane||a narrow path|G|u|rare|soft
+Laura||the laurel tree|G|g|nature,classic|soft
+Lauren||the laurel tree|G|g|nature,classic|musical
+Layla||night|G|g|calm,classic|musical
+Leah||weary; a wild cow|G|g|classic|soft
+Lena||bright, shining|G|g|light,classic|soft
+Leon||lion|G|b|strength,classic|strong
+Leonard||brave as a lion|G|b|strength,classic|strong
+Leslie||the holly garden|G|u|nature,classic|soft
+Levi||joined, attached|G|b|classic|soft
+Lewis||a renowned warrior|G|b|strength,classic|soft
+Lila||night; divine play|G|g|calm,classic|soft
+Lillian||the lily|G|g|nature,classic|musical
+Lily||the lily flower|G|g|nature,classic|soft
+Lincoln||the lake colony|G|b|classic|strong
+Logan||a little hollow|G|u|classic|strong
+Lola||sorrows; strength|G|g|rare|soft
+Louis||a renowned warrior|G|b|strength,classic|soft
+Louisa||a renowned warrior|G|g|strength,classic|musical
+Lucas||bringer of light|G|b|light,classic|soft
+Lydia||from Lydia|G|g|classic|soft
+Lyla||night|G|g|calm,rare|soft
+Madan|मदन|the god of love|S|b|love,classic|soft
+Mahavir|महावीर|the great hero|S|b|strength,classic|strong
+Mahendra|महेंद्र|the great Indra|S|b|strength,classic|strong
+Mahesh|महेश|the great lord; a name of Shiva|S|b|classic|strong
+Mangesh|मंगेश|a name of Shiva|S|b|classic|strong
+Manish|मनीष|lord of the mind; the wise one|S|b|wisdom,classic|soft
+Mayank|मयंक|the moon|S|b|sky,classic|strong
+Mrinal|मृणाल|a lotus stalk|S|b|nature,rare|soft
+Mukesh|मुकेश|a name of Shiva|S|b|classic|strong
+Mukul|मुकुल|a bud|S|b|nature,rare|soft
+Murali|मुरली|Krishna's flute|S|b|classic|musical
+Maitreyi|मैत्रेयी|a woman philosopher of the Upanishads|S|g|wisdom,rare|musical
+Mala|माला|a garland|S|g|nature,classic|soft
+Malati|मालती|a fragrant night-blooming flower|S|g|nature,classic|musical
+Mandira|मंदिरा|a temple; small hand cymbals|S|g|classic|musical
+Manjari|मंजरी|a cluster of blossoms|S|g|nature,rare|musical
+Manju|मंजु|sweet, pleasing|S|g|love,classic|soft
+Mansi|मानसी|of the mind|S|g|wisdom,rare|soft
+Medha|मेधा|intelligence|S|g|wisdom,classic|soft
+Meenakshi|मीनाक्षी|fish-eyed; the goddess of Madurai|S|g|classic|musical
+Megha|मेघा|a cloud|S|g|sky,classic|soft
+Meghna|मेघना|cloud-like; a river|S|g|water,classic|musical
+Mohini|मोहिनी|the enchantress; a form of Vishnu|S|g|love,classic|musical
+Mridula|मृदुला|soft, gentle|S|g|calm,rare|musical
+Mrinalini|मृणालिनी|a cluster of lotuses|S|g|nature,rare|musical
+Mukta|मुक्ता|a pearl; the liberated one|S|g|rare|soft
+Maeve||she who intoxicates|G|g|strength,rare|strong
+Maggie||a pearl|G|g|classic|soft
+Magnus||great|G|b|strength,rare|strong
+Marcus||of Mars, warlike|G|b|strength,classic|strong
+Margaret||a pearl|G|g|classic|musical
+Maria||beloved; bitter|G|g|classic|musical
+Mark||of Mars, warlike|G|b|classic|strong
+Martha||a lady, mistress|G|g|classic|strong
+Martin||of Mars, warlike|G|b|classic|strong
+Mary||beloved; bitter|G|g|classic|soft
+Mason||a stoneworker|G|b|classic|strong
+Matilda||mighty in battle|G|g|strength,classic|musical
+Matteo||a gift of God|G|b|classic|musical
+Matthew||a gift of God|G|b|classic|musical
+Maurice||dark-skinned, a Moor|G|b|classic|musical
+Max||the greatest|G|b|strength,classic|strong
+Maxwell||Mack's stream|G|b|water,classic|strong
+Melody||a song|G|g|classic|musical
+Mia||mine; beloved|G|g|love,classic|soft
+Michael||who is like God|G|b|classic|musical
+Michelle||who is like God|G|g|classic|musical
+Miles||a soldier; merciful|G|b|classic|soft
+Millie||gentle strength|G|g|strength,rare|soft
+Miriam||beloved; bitter|G|g|classic|musical
+Molly||a pearl; bitter|G|g|classic|soft
+Monica||an adviser|G|g|classic|musical
+Morgan||of the sea circle|G|u|water,classic|strong
+Nagesh|नागेश|lord of serpents|S|b|classic|strong
+Nandan|नंदन|delightful; a son|S|b|love,classic|soft
+Narayan|नारायण|a name of Vishnu|S|b|classic|musical
+Naveen|नवीन|new, fresh|S|b|classic|soft
+Nayan|नयन|the eye|S|b|rare|soft
+Neeraj|नीरज|born of water; the lotus|S|b|water,nature|soft
+Nilesh|नीलेश|lord of the blue; a name of Krishna|S|b|classic|strong
+Niranjan|निरंजन|spotless, unblemished|S|b|calm,classic|musical
+Nirmal|निर्मल|pure, clean|S|b|calm,classic|strong
+Nitesh|नितेश|lord of right conduct|S|b|wisdom,rare|strong
+Nalini|नलिनी|the lotus|S|g|nature,classic|musical
+Namrata|नम्रता|humility|S|g|calm,classic|musical
+Nandita|नंदिता|joyful|S|g|calm,classic|musical
+Navya|नव्या|new, youthful|S|g|classic|soft
+Nayana|नयना|the eyes|S|g|love,classic|musical
+Neelam|नीलम|the sapphire|S|g|classic|soft
+Neelima|नीलिमा|blueness|S|g|sky,rare|musical
+Neeti|नीति|right conduct, ethics|S|g|wisdom,rare|soft
+Netra|नेत्र|the eye|S|g|rare|soft
+Nidhi|निधि|a treasure|S|g|classic|soft
+Niharika|निहारिका|a nebula; dew|S|g|sky,rare|musical
+Nikita|निकिता|the earth; unconquered|S|g|classic|soft
+Nilima|नीलिमा|blue-tinged|S|g|sky,rare|musical
+Nirmala|निर्मला|pure, spotless|S|g|calm,classic|musical
+Nivedita|निवेदिता|dedicated, offered up|S|g|love,classic|musical
+Nupur|नूपुर|an anklet|S|g|classic|musical
+Nutan|नूतन|new|S|g|rare|soft
+Nadia||hope|G|g|calm,classic|musical
+Nancy||grace|G|g|classic|soft
+Natalie||born on Christmas day|G|g|classic|musical
+Natasha||born on Christmas day|G|g|classic|musical
+Nathan||a gift|G|b|classic|strong
+Nathaniel||a gift of God|G|b|classic|musical
+Neil||a champion; a cloud|G|b|classic|strong
+Nell||bright, shining|G|g|light,rare|strong
+Nelson||son of Neil|G|b|classic|strong
+Niall||a champion|G|b|rare|soft
+Nicholas||victory of the people|G|b|classic|musical
+Nicole||victory of the people|G|g|classic|musical
+Nigel||a champion; dark|G|b|rare|soft
+Nina||little girl; grace|G|g|classic|soft
+Noel||Christmas, a birthday|G|u|classic|soft
+Noelle||Christmas, a birthday|G|g|classic|musical
+Norman||a northerner|G|b|classic|strong
+Ojasvi|ओजस्वी|full of vital energy|S|u|strength,rare|musical
+Omprakash|ओमप्रकाश|the light of Om|S|b|light,classic|musical
+Oorja|ऊर्जा|energy|S|g|strength,rare|soft
+Oakley||a clearing of oaks|G|u|nature,rare|soft
+Octavia||the eighth|G|g|classic|musical
+Odette||wealth|G|g|rare|musical
+Odin||fury; the Norse all-father|G|b|strength,rare|strong
+Olga||holy, blessed|G|g|classic|strong
+Oliver||the olive tree|G|b|nature,classic|soft
+Olivia||the olive tree|G|g|nature,classic|musical
+Omar||flourishing; long-lived|G|b|classic|strong
+Opal||a gem|G|g|rare|soft
+Ophelia||help, aid|G|g|classic|musical
+Orion||the hunter; a constellation|G|b|sky,rare|musical
+Orla||golden princess|G|g|rare|soft
+Orson||a bear cub|G|b|strength,rare|strong
+Otis||wealthy|G|b|rare|strong
+Otto||wealthy|G|b|rare|strong
+Owen||well-born, noble|G|b|classic|soft
+Palash|पलाश|the flame-of-the-forest tree|S|b|nature,rare|strong
+Parag|पराग|pollen|S|b|nature,rare|soft
+Paritosh|परितोष|contentment|S|b|calm,rare|musical
+Piyush|पीयूष|nectar, ambrosia|S|b|classic|soft
+Prabhat|प्रभात|the dawn|S|b|light,classic|strong
+Pradeep|प्रदीप|a lamp, a light|S|b|light,classic|strong
+Prakash|प्रकाश|light|S|b|light,classic|strong
+Pramod|प्रमोद|delight|S|b|calm,classic|soft
+Pranav|प्रणव|the sacred syllable Om|S|b|calm,classic|soft
+Prasad|प्रसाद|grace; a blessed offering|S|b|classic|strong
+Prashant|प्रशांत|calm, tranquil|S|b|calm,classic|strong
+Pratap|प्रताप|glory, valour|S|b|strength,classic|strong
+Prem|प्रेम|love|S|b|love,classic|strong
+Prithvi|पृथ्वी|the earth|S|b|nature,classic|strong
+Puneet|पुनीत|pure, holy|S|b|calm,classic|soft
+Pushkar|पुष्कर|a blue lotus; the sacred lake|S|b|water,nature|strong
+Padma|पद्मा|the lotus; a name of Lakshmi|S|g|nature,classic|soft
+Padmini|पद्मिनी|a lotus pond|S|g|nature,classic|musical
+Parul|पारुल|a flowering tree|S|g|nature,rare|soft
+Parvati|पार्वती|daughter of the mountain; Shiva's consort|S|g|nature,classic|musical
+Payal|पायल|an anklet|S|g|classic|soft
+Poonam|पूनम|the full moon|S|g|sky,classic|soft
+Prabha|प्रभा|light, radiance|S|g|light,classic|soft
+Prachi|प्राची|the east, where dawn breaks|S|g|light,rare|soft
+Pranjal|प्रांजल|straightforward, honest|S|u|wisdom,rare|musical
+Prarthana|प्रार्थना|a prayer|S|g|love,rare|musical
+Pratibha|प्रतिभा|brilliance, talent|S|g|wisdom,classic|musical
+Preeti|प्रीति|love, affection|S|g|love,classic|soft
+Prerna|प्रेरणा|inspiration|S|g|classic|musical
+Prisha|प्रिशा|a beloved gift|S|g|love,rare|soft
+Priyanka|प्रियंका|dear one, lovable|S|g|love,classic|musical
+Purnima|पूर्णिमा|the full-moon night|S|g|sky,classic|musical
+Pushpa|पुष्पा|a flower|S|g|nature,classic|soft
+Paige||a young attendant|G|g|rare|soft
+Pascal||of Easter|G|b|rare|strong
+Patricia||noble|G|g|classic|musical
+Patrick||noble|G|b|classic|strong
+Paul||small, humble|G|b|classic|soft
+Paula||small, humble|G|g|classic|soft
+Pearl||the gem|G|g|classic|strong
+Perry||a pear tree|G|u|nature,rare|soft
+Peter||a rock|G|b|strength,classic|strong
+Peyton||a fighting man's estate|G|u|rare|soft
+Phoebe||bright, radiant|G|g|light,classic|soft
+Phillip||a lover of horses|G|b|classic|soft
+Pierce||son of Peter, rock|G|b|rare|strong
+Piper||a pipe player|G|g|rare|soft
+Poppy||the red flower|G|g|nature,rare|soft
+Porter||a gatekeeper|G|b|rare|strong
+Preston||a priest's town|G|b|classic|strong
+Priscilla||ancient, venerable|G|g|classic|musical
+Quentin||the fifth|G|b|rare|strong
+Quincy||the fifth son's estate|G|b|rare|musical
+Quinlan||strong, well-shaped|G|b|strength,rare|musical
+Quinton||the queen's manor|G|b|rare|strong
+Rachit|रचित|created, composed|S|b|rare|strong
+Rahul|राहुल|the Buddha's son|S|b|classic|soft
+Raj|राज|a king; sovereignty|S|b|strength,classic|strong
+Rajat|रजत|silver|S|b|classic|strong
+Rajeev|राजीव|the blue lotus|S|b|nature,classic|musical
+Rakshit|रक्षित|protected|S|b|strength,rare|strong
+Ramesh|रमेश|a name of Vishnu|S|b|classic|strong
+Ranjan|रंजन|delighting, pleasing|S|b|calm,classic|soft
+Ratan|रतन|a gem|S|b|classic|soft
+Ravindra|रवींद्र|lord of the sun|S|b|light,classic|musical
+Rohit|रोहित|red; the first light of the sun|S|b|light,classic|strong
+Roshan|रोशन|bright, luminous|S|b|light,classic|soft
+Radhika|राधिका|a name of Radha|S|g|love,classic|musical
+Ragini|रागिनी|a melody|S|g|classic|musical
+Rajani|रजनी|the night|S|g|calm,rare|musical
+Rakhi|राखी|a bond of protection|S|g|love,classic|soft
+Rama|रमा|a name of Lakshmi|S|g|classic|soft
+Ranjana|रंजना|delightful|S|g|calm,rare|musical
+Rashmi|रश्मि|a ray of light|S|g|light,classic|soft
+Ratna|रत्ना|a jewel|S|g|classic|soft
+Renu|रेणु|pollen; a grain of dust|S|g|nature,rare|soft
+Richa|ऋचा|a Vedic hymn|S|g|wisdom,classic|soft
+Ritika|ऋतिका|of the seasons; flowing|S|g|nature,rare|musical
+Roopa|रूपा|beauty, form|S|g|love,classic|soft
+Ruchira|रुचिरा|radiant, pleasing|S|g|light,rare|musical
+Rupali|रूपाली|full of beauty|S|g|love,classic|musical
+Rachel||a ewe|G|g|classic|soft
+Ralph||wolf counsel|G|b|classic|strong
+Ramona||a wise protector|G|g|wisdom,classic|musical
+Raymond||a wise protector|G|b|wisdom,classic|strong
+Reagan||little ruler|G|u|rare|soft
+Rebecca||to bind, to join|G|g|classic|musical
+Reese||ardour, enthusiasm|G|u|rare|soft
+Regina||a queen|G|g|strength,classic|musical
+Reid||red-haired|G|b|rare|strong
+Renee||reborn|G|g|classic|musical
+Rex||a king|G|b|strength,rare|strong
+Rhett||advice, counsel|G|b|rare|strong
+Rhys||ardour, enthusiasm|G|b|rare|strong
+Richard||a brave ruler|G|b|strength,classic|strong
+Riley||a rye clearing; valiant|G|u|classic|soft
+Rita||a pearl|G|g|classic|soft
+Robert||bright with fame|G|b|light,classic|strong
+Robin||bright with fame; the bird|G|u|nature,classic|soft
+Roland||renowned in the land|G|b|classic|strong
+Ronald||a ruler's counsel|G|b|classic|strong
+Rory||a red king|G|u|rare|soft
+Rosa||a rose|G|g|nature,classic|soft
+Rosalie||a rose garden|G|g|nature,classic|musical
+Rose||the rose|G|g|nature,classic|soft
+Rosemary||dew of the sea; the herb|G|g|nature,classic|musical
+Ross||a headland; a cape|G|b|nature,rare|strong
+Roy||a king|G|b|classic|strong
+Rufus||red-haired|G|b|rare|strong
+Russell||little red one|G|b|classic|strong
+Ruth||a companion, a friend|G|g|love,classic|strong
+Ryan||a little king|G|b|classic|soft
+Sachin|सचिन|pure; a name of Indra|S|b|classic|soft
+Sagar|सागर|the ocean|S|b|water,classic|strong
+Sahil|साहिल|the shore|S|b|water,classic|soft
+Samar|समर|a battle|S|b|strength,rare|strong
+Sameer|समीर|a gentle breeze|S|b|nature,classic|soft
+Sandeep|संदीप|a lamp that is lit|S|b|light,classic|strong
+Sankalp|संकल्प|resolve, intention|S|b|strength,rare|strong
+Santosh|संतोष|contentment|S|b|calm,classic|strong
+Satish|सतीश|lord of the truth|S|b|classic|strong
+Satya|सत्य|truth|S|b|wisdom,classic|strong
+Shailesh|शैलेश|lord of the mountain|S|b|nature,classic|strong
+Shakti|शक्ति|power, divine energy|S|u|strength,classic|strong
+Sharad|शरद|the autumn|S|b|nature,classic|strong
+Shekhar|शेखर|a crest, a summit|S|b|classic|strong
+Shivam|शिवम्|auspiciousness|S|b|calm,classic|soft
+Shlok|श्लोक|a verse, a hymn|S|b|wisdom,rare|strong
+Shubham|शुभम्|auspicious|S|b|classic|soft
+Sohan|सोहन|handsome, charming|S|b|love,classic|soft
+Subodh|सुबोध|wise, easily understood|S|b|wisdom,rare|soft
+Sudhir|सुधीर|resolute, wise|S|b|wisdom,classic|soft
+Sumit|सुमित|a good friend|S|b|classic|soft
+Sunil|सुनील|deep blue|S|b|sky,classic|soft
+Surya|सूर्य|the sun|S|b|light,classic|musical
+Sushant|सुशांत|calm, composed|S|b|calm,classic|strong
+Swapnil|स्वप्निल|dreamlike|S|b|rare|musical
+Sadhana|साधना|dedicated spiritual practice|S|g|wisdom,classic|musical
+Sagarika|सागरिका|born of the ocean|S|g|water,rare|musical
+Sahana|सहाना|patience; a raga|S|g|calm,rare|musical
+Sakshi|साक्षी|a witness|S|g|wisdom,classic|soft
+Samiksha|समीक्षा|careful review|S|g|wisdom,rare|musical
+Sandhya|संध्या|dusk; the evening prayer|S|g|calm,classic|musical
+Sangeeta|संगीता|music|S|g|classic|musical
+Sanjana|संजना|gentle; a creator|S|g|classic|musical
+Saraswati|सरस्वती|the goddess of learning and music|S|g|wisdom,classic|musical
+Savitri|सावित्री|a solar goddess; the devoted wife|S|g|light,classic|musical
+Sejal|सेजल|pure water|S|g|water,rare|soft
+Shalini|शालिनी|modest, dignified|S|g|classic|musical
+Sharda|शारदा|a name of Saraswati|S|g|wisdom,classic|soft
+Sharmila|शर्मिला|modest|S|g|classic|musical
+Shefali|शेफाली|the night-flowering jasmine|S|g|nature,rare|musical
+Shikha|शिखा|a flame; a peak|S|g|light,classic|soft
+Shilpa|शिल्पा|well-crafted; art|S|g|classic|soft
+Shivani|शिवानी|a name of Parvati|S|g|strength,classic|musical
+Shraddha|श्रद्धा|faith, reverence|S|g|calm,classic|musical
+Shruti|श्रुति|that which is heard; the Vedas|S|g|wisdom,classic|soft
+Shweta|श्वेता|white, pure|S|g|classic|soft
+Smita|स्मिता|smiling|S|g|calm,classic|soft
+Sonal|सोनल|golden|S|g|classic|soft
+Soumya|सौम्या|gentle, mild|S|u|calm,classic|musical
+Sudha|सुधा|nectar|S|g|classic|soft
+Suhani|सुहानी|pleasant, lovely|S|g|calm,classic|musical
+Sukanya|सुकन्या|a lovely maiden|S|g|classic|musical
+Suman|सुमन|a flower; good-hearted|S|u|nature,classic|soft
+Sumitra|सुमित्रा|a good friend; Lakshman's mother|S|g|classic|musical
+Sunanda|सुनंदा|delightful|S|g|calm,rare|musical
+Supriya|सुप्रिया|much beloved|S|g|love,classic|musical
+Surabhi|सुरभि|fragrance; the wish-granting cow|S|g|nature,rare|musical
+Sushma|सुषमा|great beauty|S|g|love,classic|musical
+Swara|स्वरा|a musical note|S|g|rare|soft
+Sadie||princess|G|g|classic|soft
+Samuel||God has heard|G|b|classic|musical
+Sandra||defender of the people|G|g|strength,classic|musical
+Sarah||a princess|G|g|classic|soft
+Savannah||a treeless plain|G|g|nature,classic|musical
+Scarlett||bright red cloth|G|g|classic|strong
+Scott||a Gael, a Scotsman|G|b|classic|strong
+Sean||God is gracious|G|b|classic|soft
+Sebastian||venerable, revered|G|b|classic|musical
+Selena||the moon|G|g|sky,classic|musical
+Serena||serene, calm|G|g|calm,classic|musical
+Seth||appointed|G|b|classic|strong
+Shane||God is gracious|G|b|rare|soft
+Sheila||heavenly; blind|G|g|classic|soft
+Sienna||reddish-brown earth|G|g|nature,classic|musical
+Simon||he has heard|G|b|classic|soft
+Simone||she has heard|G|g|classic|musical
+Sloane||a raider|G|u|rare|strong
+Sonia||wisdom|G|g|wisdom,classic|musical
+Sophie||wisdom|G|g|wisdom,classic|soft
+Spencer||a keeper of provisions|G|b|classic|strong
+Stanley||a stony meadow|G|b|classic|strong
+Stephen||a crown|G|b|classic|strong
+Stuart||a household guardian|G|b|classic|strong
+Summer||the season|G|g|nature,classic|soft
+Susan||a lily|G|g|nature,classic|soft
+Sydney||a wide meadow|G|u|classic|soft
+Sylvia||of the forest|G|g|nature,classic|musical
+Tanmay|तन्मय|wholly absorbed|S|b|calm,rare|musical
+Tanuj|तनुज|a son|S|b|rare|soft
+Tapan|तपन|the sun; warmth|S|b|light,rare|strong
+Tarak|तारक|a star; a deliverer|S|b|sky,classic|strong
+Trilok|त्रिलोक|the three worlds|S|b|rare|strong
+Tushar|तुषार|frost, snow|S|b|nature,classic|strong
+Tanisha|तनिषा|ambition|S|g|rare|musical
+Tanuja|तनुजा|a daughter|S|g|love,rare|musical
+Tanushree|तनुश्री|beautiful of form|S|g|love,rare|musical
+Tarini|तारिणी|one who liberates; a name of Durga|S|g|strength,rare|musical
+Tejal|तेजल|radiant|S|g|light,rare|soft
+Trisha|तृषा|desire|S|g|classic|soft
+Trupti|तृप्ति|satisfaction|S|g|calm,rare|soft
+Tulsi|तुलसी|the sacred basil|S|g|nature,classic|soft
+Tabitha||a gazelle|G|g|nature,rare|musical
+Talia||dew from heaven|G|g|sky,nature|musical
+Tamara||a date palm|G|g|nature,classic|musical
+Tanner||a leather worker|G|b|rare|strong
+Terence||smooth, polished|G|b|classic|musical
+Teresa||a harvester|G|g|classic|musical
+Thaddeus||courageous of heart|G|b|strength,rare|musical
+Thea||a goddess; divine|G|g|rare|soft
+Theodore||a gift of God|G|b|classic|musical
+Thomas||a twin|G|b|classic|strong
+Tiffany||a manifestation of God|G|g|classic|musical
+Timothy||honouring God|G|b|classic|musical
+Tina||small one|G|g|classic|soft
+Tracy||of Thracia|G|u|classic|soft
+Travis||a crossing, a tollgate|G|b|rare|strong
+Trevor||a large settlement|G|b|classic|strong
+Trinity||the threefold|G|g|rare|musical
+Tristan||a bold outcry; the legend's hero|G|b|classic|strong
+Troy||a foot soldier; the ancient city|G|b|classic|strong
+Tucker||a cloth softener|G|b|rare|strong
+Tyler||a tile-maker|G|b|classic|soft
+Tyson||a firebrand|G|b|strength,rare|strong
+Ulka|उल्का|a meteor|S|g|sky,rare|soft
+Umesh|उमेश|lord of Uma; a name of Shiva|S|b|classic|strong
+Upendra|उपेंद्र|a name of Vishnu|S|b|classic|strong
+Urvashi|उर्वशी|a celestial nymph|S|g|classic|musical
+Usha|उषा|the dawn|S|g|light,classic|soft
+Utpal|उत्पल|the water lily|S|b|water,nature|strong
+Utsav|उत्सव|a festival|S|b|calm,rare|strong
+Uttara|उत्तरा|the north; the superior one|S|g|classic,rare|musical
+Una||one; unity|G|g|rare|soft
+Ursula||a little bear|G|g|strength,rare|musical
+Vaibhav|वैभव|grandeur, prosperity|S|b|classic|strong
+Valmiki|वाल्मीकि|the sage who composed the Ramayana|S|b|wisdom,rare|musical
+Varun|वरुण|the Vedic god of the waters|S|b|water,classic|soft
+Vasant|वसंत|the spring|S|b|nature,classic|strong
+Vasudev|वासुदेव|Krishna's father; a name of Krishna|S|b|classic|musical
+Venkat|वेंकट|the deity of the Tirupati hills|S|b|classic|strong
+Vijay|विजय|victory|S|b|strength,classic|strong
+Vimal|विमल|pure, spotless|S|b|calm,classic|soft
+Vishal|विशाल|vast, immense|S|b|strength,classic|strong
+Vishnu|विष्णु|the preserver of the universe|S|b|classic|strong
+Vivek|विवेक|discernment, wisdom|S|b|wisdom,classic|strong
+Vyas|व्यास|the sage who compiled the Vedas|S|b|wisdom,rare|strong
+Vaishali|वैशाली|an ancient republic; prosperous|S|g|classic|musical
+Vaishnavi|वैष्णवी|a devotee of Vishnu|S|g|classic|musical
+Varuni|वारुणी|consort of Varuna|S|g|water,rare|musical
+Vasudha|वसुधा|the earth|S|g|nature,classic|musical
+Veda|वेदा|sacred knowledge|S|g|wisdom,classic|soft
+Vibha|विभा|light, radiance|S|g|light,rare|soft
+Vidhi|विधि|destiny; a sacred rule|S|g|rare|soft
+Vijaya|विजया|victory|S|g|strength,classic|musical
+Vimala|विमला|pure|S|g|calm,classic|musical
+Vinita|विनीता|modest, humble|S|g|classic|musical
+Vishakha|विशाखा|a nakshatra|S|g|sky,classic|musical
+Vrinda|वृंदा|the holy basil; a multitude|S|g|nature,classic|soft
+Valentina||strong, healthy|G|g|strength,classic|musical
+Valerie||strong, valiant|G|g|strength,classic|musical
+Vanessa||a literary invention; a butterfly|G|g|classic|musical
+Vaughn||small|G|b|rare|strong
+Vera||faith; truth|G|g|calm,classic|soft
+Verity||truth|G|g|wisdom,rare|musical
+Vernon||the alder grove|G|b|nature,rare|strong
+Veronica||she who brings victory|G|g|strength,classic|musical
+Victor||the conqueror|G|b|strength,classic|strong
+Victoria||victory|G|g|strength,classic|musical
+Vito||life|G|b|rare|strong
+Vivian||alive|G|u|classic|musical
+Vivienne||alive|G|g|classic|musical
+Wade||a ford, a river crossing|G|b|water,rare|strong
+Wallace||a foreigner, a Welshman|G|b|classic|strong
+Walter||a commander of the army|G|b|strength,classic|strong
+Wanda||a wanderer|G|g|rare|soft
+Warren||a park, a game preserve|G|b|nature,classic|strong
+Waverly||a meadow of quivering aspens|G|g|nature,rare|musical
+Wayne||a wagon-maker|G|b|classic|strong
+Wendy||a literary invention; a friend|G|g|classic|soft
+Wesley||the western meadow|G|b|nature,classic|soft
+Whitney||the white island|G|u|rare|soft
+Wilbur||a bright will|G|b|rare|strong
+Wilfred||one who desires peace|G|b|calm,rare|strong
+Wilhelmina||a resolute protector|G|g|strength,rare|musical
+Willa||a resolute protector|G|g|strength,rare|soft
+William||a resolute protector|G|b|strength,classic|soft
+Winifred||blessed peacemaking|G|g|calm,rare|musical
+Winnie||fair one; blessed peace|G|g|calm,rare|soft
+Winston||a joyful stone|G|b|classic|strong
+Xander||defender of the people|G|b|strength,rare|strong
+Xanthe||golden, bright yellow|G|g|light,rare|musical
+Xena||a guest, a stranger|G|g|rare|musical
+Xiomara||ready for battle|G|g|strength,rare|musical
+Yashoda|यशोदा|Krishna's foster mother|S|g|love,classic|musical
+Yashvi|यशवी|glorious|S|g|rare|soft
+Yashwant|यशवंत|glorious, famous|S|b|classic|strong
+Yatin|यतिन|one who strives; an ascetic|S|b|wisdom,rare|soft
+Yamuna|यमुना|the sacred river|S|g|water,classic|musical
+Yogita|योगिता|one absorbed in yoga|S|g|wisdom,rare|musical
+Yasmine||the jasmine flower|G|g|nature,classic|musical
+Yvette||the yew tree|G|g|nature,rare|musical
+Yvonne||the yew tree|G|g|nature,classic|musical
+Zachary||the Lord has remembered|G|b|classic|musical
+Zander||defender of the people|G|b|strength,rare|strong
+Zelda||a grey fighting maid|G|g|strength,rare|strong
+Zora||the dawn|G|g|light,rare|soft
+Zuri||beautiful|G|g|love,rare|soft
+Achintya|अचिंत्य|beyond thought|S|b|wisdom,rare|musical
+Aja|अज|unborn, eternal|S|b|classic,rare|strong
+Akhilesh|अखिलेश|lord of all|S|b|strength,classic|musical
+Ambarish|अंबरीष|a righteous king of the solar line|S|b|classic,rare|musical
+Anshuman|अंशुमान|radiant; the sun|S|b|light,classic|musical
+Anubhav|अनुभव|experience|S|b|wisdom,rare|strong
+Aparajit|अपराजित|undefeated|S|b|strength,rare|musical
+Arjit|अर्जित|earned through effort|S|b|rare|strong
+Arnab|अर्णब|the ocean|S|b|water,rare|strong
+Arnesh|अर्णेश|lord of the sea|S|b|water,rare|strong
+Aseem|असीम|boundless|S|b|rare|soft
+Ashutosh|आशुतोष|easily pleased; a name of Shiva|S|b|calm,classic|musical
+Ashwath|अश्वत्थ|the sacred fig tree|S|b|nature,rare|strong
+Amodini|आमोदिनी|joyful, fragrant|S|g|calm,rare|musical
+Anwesha|अन्वेषा|a quest, a search|S|g|wisdom,rare|musical
+Aparajita|अपराजिता|undefeated; the blue pea flower|S|g|strength,nature|musical
+Archita|अर्चिता|worshipped|S|g|love,rare|musical
+Ashima|अशिमा|boundless|S|g|rare|soft
+Ashrita|आश्रिता|one who has taken refuge|S|g|calm,rare|musical
+Asmita|अस्मिता|self-respect, identity|S|g|strength,rare|musical
+Atmaja|आत्मजा|born of the soul; a daughter|S|g|love,rare|musical
+Atreyi|आत्रेयी|of the sage Atri; a river|S|g|wisdom,rare|musical
+Avanti|अवंती|the ancient city of Ujjain|S|g|classic,rare|musical
+Baldev|बलदेव|the god of strength|S|b|strength,classic|strong
+Bhadra|भद्र|auspicious, good|S|u|calm,rare|strong
+Bhagirath|भगीरथ|the king who brought Ganga to earth|S|b|strength,rare|musical
+Bhairav|भैरव|a fierce form of Shiva|S|b|strength,rare|strong
+Bhuvi|भुवि|the heavens|S|g|sky,rare|soft
+Chakor|चकोर|the bird said to love the moon|S|b|nature,rare|strong
+Chandana|चंदना|sandalwood|S|g|nature,classic|musical
+Charita|चरिता|of good character|S|g|wisdom,rare|musical
+Chinmayi|चिन्मयी|full of consciousness|S|g|wisdom,rare|musical
+Chintan|चिंतन|contemplation|S|b|wisdom,rare|strong
+Chiranjeev|चिरंजीव|long-lived|S|b|rare|musical
+Dattatreya|दत्तात्रेय|a sage-deity of the trinity|S|b|wisdom,rare|musical
+Devdatt|देवदत्त|given by the gods|S|b|classic,rare|strong
+Dhanvi|धन्वी|one who bears a bow|S|g|strength,rare|soft
+Dhanya|धन्या|blessed, fortunate|S|g|calm,classic|soft
+Dharmendra|धर्मेंद्र|lord of righteousness|S|b|wisdom,classic|strong
+Divyanshi|दिव्यांशी|a divine portion|S|g|light,rare|musical
+Dyuti|द्युति|brilliance, splendour|S|g|light,rare|soft
+Girdhar|गिरधर|he who lifted the mountain; Krishna|S|b|strength,classic|strong
+Govardhan|गोवर्धन|the hill Krishna lifted|S|b|nature,classic|musical
+Gunja|गुंजा|the humming of bees; a red seed|S|g|nature,rare|soft
+Gyan|ज्ञान|knowledge|S|b|wisdom,classic|strong
+Gyanendra|ज्ञानेंद्र|lord of knowledge|S|b|wisdom,rare|musical
+Harshita|हर्षिता|joyful|S|g|calm,classic|musical
+Hemal|हेमल|golden|S|u|rare|soft
+Hemang|हेमांग|golden-limbed|S|b|rare|strong
+Hemlata|हेमलता|a golden vine|S|g|nature,rare|musical
+Hiranmayi|हिरण्मयी|made of gold|S|g|rare|musical
+Hiranya|हिरण्य|gold|S|u|rare|musical
+Ilesh|इलेश|lord of the earth|S|b|rare|strong
+Indranil|इंद्रनील|the sapphire|S|b|rare|musical
+Induja|इंदुजा|daughter of the moon|S|g|sky,rare|musical
+Ishika|इषिका|a paintbrush; an arrow|S|g|rare|soft
+Jagat|जगत्|the world|S|b|classic|strong
+Jaidev|जयदेव|god of victory; the poet of the Gita Govinda|S|b|strength,classic|musical
+Jaimini|जैमिनी|a Vedic philosopher|S|b|wisdom,rare|musical
+Jayshree|जयश्री|the glory of victory|S|g|strength,classic|musical
+Jishnu|जिष्णु|victorious; a name of Vishnu|S|b|strength,rare|strong
+Jyotsna|ज्योत्स्ना|moonlight|S|g|sky,classic|musical
+Kalindi|कालिंदी|the river Yamuna|S|g|water,rare|musical
+Kalpesh|कल्पेश|lord of the aeon|S|b|rare|strong
+Kamlesh|कमलेश|lord of the lotus|S|b|nature,classic|strong
+Kanad|कणाद|the sage who taught atomism|S|b|wisdom,rare|strong
+Kanchana|कांचना|golden|S|g|classic|musical
+Karishma|करिश्मा|a miracle|S|g|classic|musical
+Kaumudi|कौमुदी|moonlight|S|g|sky,rare|musical
+Keertana|कीर्तना|a devotional song|S|g|rare|musical
+Kirtan|कीर्तन|devotional singing|S|b|rare|strong
+Kshama|क्षमा|forgiveness, patience|S|g|calm,rare|soft
+Kshitij|क्षितिज|the horizon|S|b|sky,rare|strong
+Lakshmikant|लक्ष्मीकांत|beloved of Lakshmi; Vishnu|S|b|classic,rare|musical
+Lekha|लेखा|writing; a line|S|g|wisdom,rare|soft
+Lochana|लोचना|the eye|S|g|rare|musical
+Madhavi|माधवी|a spring creeper|S|g|nature,classic|musical
+Madhur|मधुर|sweet|S|b|love,classic|soft
+Mahima|महिमा|greatness, glory|S|g|classic|musical
+Malhar|मल्हार|the monsoon raga|S|b|nature,rare|strong
+Malvika|मालविका|a princess of Malwa|S|g|classic,rare|musical
+Manohar|मनोहर|captivating the mind|S|b|love,classic|musical
+Mayur|मयूर|a peacock|S|b|nature,classic|strong
+Menaka|मेनका|a celestial nymph|S|g|classic,rare|musical
+Mitali|मिताली|friendship|S|g|love,classic|musical
+Mitra|मित्र|a friend; a Vedic sun god|S|u|love,classic|soft
+Mohana|मोहना|enchanting|S|g|love,rare|musical
+Mridul|मृदुल|soft, tender|S|b|calm,rare|soft
+Mukund|मुकुंद|giver of liberation; a name of Krishna|S|b|classic|strong
+Nachiketa|नचिकेता|the boy who questioned Death|S|b|wisdom,rare|musical
+Nandkishore|नंदकिशोर|the young Krishna|S|b|classic,rare|musical
+Narsimha|नरसिंह|the man-lion avatar of Vishnu|S|b|strength,classic|musical
+Neerja|नीरजा|born of water; the lotus|S|g|water,nature|musical
+Nikunj|निकुंज|a grove, a bower|S|b|nature,rare|strong
+Nirupama|निरुपमा|incomparable|S|g|classic,rare|musical
+Nishith|निशीथ|midnight|S|b|calm,rare|strong
+Nishtha|निष्ठा|dedication, steadfast faith|S|g|calm,rare|strong
+Padmanabh|पद्मनाभ|lotus-naveled; a name of Vishnu|S|b|classic,rare|musical
+Pallav|पल्लव|a new leaf|S|b|nature,rare|soft
+Panchami|पंचमी|the fifth day|S|g|rare|musical
+Parikshit|परीक्षित|a king of the Mahabharata|S|b|classic,rare|musical
+Pavani|पावनी|pure, purifying|S|g|calm,rare|musical
+Pinaki|पिनाकी|bearer of the bow; a name of Shiva|S|b|strength,rare|musical
+Poorvi|पूर्वी|of the east; a raga|S|g|light,classic|musical
+Prabodh|प्रबोध|awakening, knowledge|S|b|wisdom,rare|strong
+Pranshu|प्रांशु|tall|S|b|rare|strong
+Pratima|प्रतिमा|an image, a likeness|S|g|classic|musical
+Priyamvada|प्रियंवदा|sweet-spoken|S|g|love,rare|musical
+Pulkit|पुलकित|thrilled, delighted|S|b|calm,rare|strong
+Purab|पूरब|the east|S|b|light,rare|soft
+Raghav|राघव|of Raghu's line; a name of Rama|S|b|classic|strong
+Rajendra|राजेंद्र|lord of kings|S|b|strength,classic|musical
+Rajeshwari|राजेश्वरी|the queen goddess|S|g|strength,classic|musical
+Ramakrishna|रामकृष्ण|Rama and Krishna together|S|b|classic,rare|musical
+Ramya|रम्या|pleasing, beautiful|S|g|love,classic|musical
+Rati|रति|the goddess of love|S|g|love,classic|soft
+Ritesh|ऋतेश|lord of the seasons|S|b|nature,rare|strong
+Ritu|ऋतु|a season|S|g|nature,classic|soft
+Ritwik|ऋत्विक|a priest who performs the rites|S|b|wisdom,rare|strong
+Rohini|रोहिणी|a nakshatra; Balarama's mother|S|g|sky,classic|musical
+Rudraksh|रुद्राक्ष|Shiva's sacred bead|S|b|strength,rare|strong
+Sadashiv|सदाशिव|the eternally auspicious; Shiva|S|b|classic,rare|musical
+Saket|साकेत|another name for Ayodhya|S|b|classic,rare|strong
+Saloni|सलोनी|lovely, charming|S|g|love,classic|musical
+Sanat|सनत्|eternal; a mind-born son of Brahma|S|b|wisdom,rare|strong
+Sanchita|संचिता|collected, gathered|S|g|rare|musical
+Sarita|सरिता|a river|S|g|water,classic|musical
+Shakuntala|शकुंतला|the heroine of Kalidasa's play|S|g|classic,rare|musical
+Shashi|शशि|the moon|S|u|sky,classic|soft
+Shashwat|शाश्वत|eternal|S|b|calm,rare|strong
+Shivangi|शिवांगी|of Shiva's form|S|g|strength,rare|musical
+Shridhar|श्रीधर|bearer of Lakshmi; a name of Vishnu|S|b|classic|strong
+Shrikant|श्रीकांत|beloved of Lakshmi; Vishnu|S|b|classic|strong
+Shubhangi|शुभांगी|one of beautiful form|S|g|classic|musical
+Siddhesh|सिद्धेश|lord of accomplishment|S|b|rare|strong
+Somnath|सोमनाथ|lord of the moon; the Shiva shrine|S|b|classic,rare|musical
+Srishti|सृष्टि|creation|S|g|nature,classic|strong
+Subhash|सुभाष|well-spoken|S|b|wisdom,classic|strong
+Sudarshan|सुदर्शन|fair to look upon; Vishnu's discus|S|b|classic|musical
+Sukumar|सुकुमार|tender, delicate|S|b|calm,rare|musical
+Sulochana|सुलोचना|one with beautiful eyes|S|g|love,rare|musical
+Swaraj|स्वराज|self-rule|S|b|strength,rare|strong
+Swarnima|स्वर्णिमा|golden|S|g|light,rare|musical
+Tarangini|तरंगिणी|a river full of waves|S|g|water,rare|musical
+Tejasvi|तेजस्वी|radiant, brilliant|S|u|light,rare|musical
+Trilochan|त्रिलोचन|three-eyed; a name of Shiva|S|b|strength,rare|musical
+Trishna|तृष्णा|thirst, longing|S|g|rare|musical
+Udayan|उदयन|rising; an ancient king|S|b|light,rare|musical
+Umang|उमंग|enthusiasm, joy|S|b|calm,rare|strong
+Urmi|ऊर्मि|a wave|S|g|water,rare|soft
+Utkarsha|उत्कर्षा|excellence|S|g|rare|musical
+Vasav|वासव|a name of Indra|S|b|classic,rare|strong
+Vasavi|वासवी|of Indra|S|g|rare|musical
+Vasundhara|वसुंधरा|the earth, bearer of wealth|S|g|nature,classic|musical
+Vidur|विदुर|the wise counsellor of the Mahabharata|S|b|wisdom,rare|strong
+Vikas|विकास|progress, unfolding|S|b|classic|strong
+Vinaya|विनया|modesty|S|g|calm,rare|musical
+Vinod|विनोद|delight, joy|S|b|calm,classic|soft
+Virendra|वीरेंद्र|lord of heroes|S|b|strength,classic|musical
+Vishwas|विश्वास|trust, faith|S|b|calm,rare|strong
+Vrushali|वृषाली|the wife of Karna|S|g|classic,rare|musical
+Yagya|यज्ञ|a sacred fire ritual|S|b|wisdom,rare|strong
+Yashas|यशस्|fame, renown|S|b|rare|strong
+Yukta|युक्ता|joined; skilful|S|g|rare|soft
 `.trim();
 
 const NAMES = RAW.split("\n").map((l,i)=>{
-  const [n,m,o,g,t,s]=l.split("|");
-  return {i,n,m,o,g,t:t.split(","),s,len:n.length};
+  const [n,dn,m,o,g,t,s]=l.split("|");
+  return {i,n,dn,m,o,g,t:t.split(","),s,len:n.length};
 });
-const ORIGIN={S:"Sanskrit",M:"Modern",G:"Global"};
+const ORIGIN={S:"Sanskrit",G:"Global"};
 const GENDER={b:"for a boy",g:"for a girl",u:"either way"};
-const HUE={S:"#FFB627",M:"#3FCFA6",G:"#9C8FC4"};
+const HUE={S:"#FFB627",G:"#9C8FC4"};
 
 /* ============ STATE ============ */
 let kept=[];           // indices
 let seen=[];           // indices removed from deck
 let history=[];        // {i, action}
 let deckFilter="all";
+let deckAlpha="all";
 let browseFilter="all";
 let browseOrigin="all";
+let browseSyl="all";
 let query="";
-let quizAns={};
 
 /* soft persistence — silently skipped if unavailable */
 async function save(){
-  try{ await window.storage.set("namegame",JSON.stringify({kept,who:who.textContent})); }catch(e){}
+  try{ await window.storage.set("namegame",JSON.stringify({kept})); }catch(e){}
 }
 async function load(){
   try{
     const r=await window.storage.get("namegame");
-    if(r&&r.value){const d=JSON.parse(r.value); kept=d.kept||[]; if(d.who) who.textContent=d.who;}
+    if(r&&r.value){const d=JSON.parse(r.value); kept=d.kept||[];}
   }catch(e){}
   renderBar();
 }
 
 /* ============ HELPERS ============ */
 const $=id=>document.getElementById(id);
-const who=$("who");
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
 let toastT;
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1400);}
 function matchG(name,f){return f==="all"||name.g===f||(f==="u"&&name.g==="u");}
+function syllableOf(name){const m=name.match(/^[^aeiouAEIOU]*[aeiouAEIOU]+/);return m?m[0]:name[0];}
 
 /* ============ TABS ============ */
 document.querySelectorAll(".tab").forEach(t=>{
@@ -498,16 +1734,31 @@ function buildChips(el,active,cb){
     el.appendChild(b);
   });
 }
+function buildAlphaChips(el,active,cb){
+  el.innerHTML="";
+  const btnAll=document.createElement("button");
+  btnAll.className="chip";btnAll.textContent="A–Z";
+  btnAll.setAttribute("aria-pressed",active()==="all");
+  btnAll.onclick=()=>cb("all");
+  el.appendChild(btnAll);
+  [...new Set(NAMES.map(n=>n.n[0].toUpperCase()))].sort().forEach(letter=>{
+    const b=document.createElement("button");
+    b.className="chip";b.textContent=letter;b.setAttribute("aria-pressed",active()===letter);
+    b.onclick=()=>cb(letter);
+    el.appendChild(b);
+  });
+}
 
 /* ============ DECK ============ */
 let deck=[];
 function buildDeck(){
-  deck=shuffle(NAMES.filter(n=>matchG(n,deckFilter)&&!seen.includes(n.i)).map(n=>n.i));
+  deck=shuffle(NAMES.filter(n=>matchG(n,deckFilter)&&(deckAlpha==="all"||n.n[0].toUpperCase()===deckAlpha)&&!seen.includes(n.i)).map(n=>n.i));
   renderDeck();
 }
 function renderDeck(){
   const st=$("stage");st.innerHTML="";
   buildChips($("deckChips"),()=>deckFilter,v=>{deckFilter=v;seen=[];history=[];buildDeck();});
+  buildAlphaChips($("deckAlphaChips"),()=>deckAlpha,v=>{deckAlpha=v;seen=[];history=[];buildDeck();});
   if(!deck.length){
     $("deckActs").style.display="none";$("deckHint").style.display="none";
     st.style.height="auto";
@@ -536,6 +1787,7 @@ function renderDeck(){
       <div class="stamp keep">Keep</div>
       <div class="stamp pass">Pass</div>
       <div class="card-name">${n.n}</div>
+      ${n.dn?`<div class="card-dn">${n.dn}</div>`:""}
       <div class="card-mean">${n.m}</div>
       <div class="card-foot"><span>${n.len} letters</span><span>${n.s}</span><span>${n.t[0]}</span></div>`;
     st.appendChild(c);
@@ -584,7 +1836,7 @@ $("bUndo").onclick=()=>{
   deck.unshift(h.idx);renderBar();renderDeck();save();toast("Back");
 };
 document.addEventListener("keydown",e=>{
-  if($("p-deck").classList.contains("on")&&document.activeElement.tagName!=="INPUT"&&!who.contains(document.activeElement)){
+  if($("p-deck").classList.contains("on")&&document.activeElement.tagName!=="INPUT"){
     if(e.key==="ArrowRight")$("bKeep").click();
     if(e.key==="ArrowLeft")$("bPass").click();
   }
@@ -595,15 +1847,28 @@ function renderRows(){
   const el=$("rows");el.innerHTML="";
   buildChips($("browseChips"),()=>browseFilter,v=>{browseFilter=v;renderRows();});
   const oWrap=$("browseChips");
-  [["all","all roots"],["S","Sanskrit"],["M","Modern"],["G","Global"]].forEach(([v,l])=>{
+  [["all","all roots"],["S","Sanskrit"],["G","Global"]].forEach(([v,l])=>{
     const b=document.createElement("button");
     b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",v===browseOrigin);
     b.onclick=()=>{browseOrigin=v;renderRows();};
     oWrap.appendChild(b);
   });
+  const sylWrap=$("sylChips");sylWrap.innerHTML="";
+  const sylAll=document.createElement("button");
+  sylAll.className="chip";sylAll.textContent="all syllables";
+  sylAll.setAttribute("aria-pressed",browseSyl==="all");
+  sylAll.onclick=()=>{browseSyl="all";renderRows();};
+  sylWrap.appendChild(sylAll);
+  [...new Set(NAMES.filter(n=>n.o==="S").map(n=>syllableOf(n.n)))].sort((a,b)=>a.localeCompare(b)).forEach(s=>{
+    const b=document.createElement("button");
+    b.className="chip";b.textContent=s;b.setAttribute("aria-pressed",browseSyl===s);
+    b.onclick=()=>{browseSyl=s;renderRows();};
+    sylWrap.appendChild(b);
+  });
   const q=query.toLowerCase();
   const list=NAMES.filter(n=>matchG(n,browseFilter)
     &&(browseOrigin==="all"||n.o===browseOrigin)
+    &&(browseSyl==="all"||syllableOf(n.n)===browseSyl)
     &&(!q||n.n.toLowerCase().includes(q)||n.m.toLowerCase().includes(q)));
   $("browseCount").textContent=list.length+" names";
   list.forEach(n=>{
@@ -622,62 +1887,169 @@ function renderRows(){
 }
 $("search").oninput=e=>{query=e.target.value;renderRows();};
 
-/* ============ QUIZ ============ */
-const QUIZ=[
-  {k:"sound",t:"How should it sound out loud?",o:[["soft","Soft and flowing","Aarav, Luna, Meera"],["strong","Short and strong","Veer, Wren, Leo"],["musical","Musical and unusual","Elena, Sasha, Indigo"],["any","Surprise me",""]]},
-  {k:"origin",t:"Where should it come from?",o:[["S","Sanskrit roots","meaning it can grow into"],["M","Modern and short","travels anywhere"],["G","From further afield","Global picks"],["any","Mix it all up",""]]},
-  {k:"len",t:"How long?",o:[["s","Three or four letters","Ira, Veer, Kai"],["m","Around five","Meera, Milo"],["any","Length doesn't matter",""]]},
-  {k:"vibe",t:"Familiar or rare?",o:[["classic","Something rooted","people will know it"],["rare","Something rare","they'll be the only one"],["any","Either",""]]},
-  {k:"theme",t:"What should it mean?",o:[["light","Light and the sun",""],["nature","Earth, trees, water",""],["sky","Sky, moon, stars",""],["strength","Strength and calm",""]]}
-];
+/* ============ QUIZ — Pairs ============ */
+const ROUNDS=12;
+const THEMES=["light","nature","water","sky","strength","calm","love","wisdom"];
+let quizPairs=[],quizRound=0,quizScores=null,quizAnswered=0,quizSkipped=0,quizShown=new Set();
+
+function lenBucket(n){return n.len<=4?"s":(n.len===5?"m":"l");}
+function rcOf(n){return n.t.includes("rare")?"rare":(n.t.includes("classic")?"classic":"mid");}
+function axisDiff(a,b){
+  let d=0;
+  if(a.s!==b.s)d++;
+  if(a.o!==b.o)d++;
+  if(lenBucket(a)!==lenBucket(b))d++;
+  if(rcOf(a)!==rcOf(b))d++;
+  return d;
+}
+function buildQuizPairs(){
+  for(let attempt=0;attempt<50;attempt++){
+    const pool=shuffle(NAMES.map(n=>n.i));
+    const used=new Set();const pairs=[];let cross=0;
+    const minDiff=attempt<30?2:1;
+    for(let i=0;i<pool.length&&pairs.length<ROUNDS;i++){
+      const a=pool[i];if(used.has(a))continue;
+      for(let j=i+1;j<pool.length;j++){
+        const b=pool[j];if(used.has(b))continue;
+        const A=NAMES[a],B=NAMES[b];
+        const diff=axisDiff(A,B);
+        const isCross=(A.o==="G")!==(B.o==="G");
+        if(diff>=minDiff&&(!isCross||cross<3)){
+          pairs.push([a,b]);used.add(a);used.add(b);
+          if(isCross)cross++;
+          break;
+        }
+      }
+    }
+    if(pairs.length===ROUNDS)return pairs;
+  }
+  const pool=shuffle(NAMES.map(n=>n.i)).slice(0,ROUNDS*2);
+  const pairs=[];
+  for(let i=0;i<pool.length;i+=2)pairs.push([pool[i],pool[i+1]]);
+  return pairs;
+}
+function freshScores(){
+  return{
+    sound:{soft:0,strong:0,musical:0},
+    origin:{S:0,G:0},
+    length:{s:0,m:0,l:0},
+    rc:{rare:0,classic:0,mid:0},
+    themes:Object.fromEntries(THEMES.map(t=>[t,0]))
+  };
+}
+function startQuiz(){
+  quizPairs=buildQuizPairs();
+  quizShown=new Set(quizPairs.flat());
+  quizRound=0;quizScores=freshScores();quizAnswered=0;quizSkipped=0;
+  renderQuiz();
+}
+function recordPick(idx){
+  const n=NAMES[idx];
+  quizScores.sound[n.s]++;
+  if(quizScores.origin[n.o]!==undefined)quizScores.origin[n.o]++;
+  quizScores.length[lenBucket(n)]++;
+  quizScores.rc[rcOf(n)]++;
+  n.t.forEach(t=>{if(quizScores.themes[t]!==undefined)quizScores.themes[t]++;});
+  quizAnswered++;
+}
 function renderQuiz(){
   const b=$("quizBody");b.innerHTML="";
-  QUIZ.forEach((q,i)=>{
-    const d=document.createElement("div");d.className="q";
-    d.innerHTML=`<div class="q-n">Question ${i+1} of ${QUIZ.length}</div><h2 class="q-t">${q.t}</h2>`;
-    const o=document.createElement("div");o.className="opts";
-    q.o.forEach(([v,l,s])=>{
-      const btn=document.createElement("button");btn.className="opt";
-      btn.setAttribute("aria-pressed",quizAns[q.k]===v);
-      btn.innerHTML=l+(s?`<small>${s}</small>`:"");
-      btn.onclick=()=>{quizAns[q.k]=v;renderQuiz();};
-      o.appendChild(btn);
-    });
-    d.appendChild(o);b.appendChild(d);
-  });
-  const done=Object.keys(quizAns).length===QUIZ.length;
-  const go=document.createElement("button");
-  go.className="btn";go.style.width="100%";go.style.padding="15px";
-  go.textContent=done?"Show my names":"Answer all five to see names";
-  go.disabled=!done;go.style.opacity=done?1:.4;
-  go.onclick=showQuizResults;
-  b.appendChild(go);
+  if(quizRound>=quizPairs.length){showQuizResults();return;}
+  const [ai,bi]=quizPairs[quizRound];
+  const A=NAMES[ai],B=NAMES[bi];
+  const wrap=document.createElement("div");
+  wrap.innerHTML=`<div class="q-n">Round ${quizRound+1} of ${quizPairs.length}</div>
+    <h2 class="q-t">Which would you actually call out loud?</h2>
+    <div class="vs">
+      <button class="vs-card" id="pA">
+        <div class="vs-name">${A.n}</div>
+        ${A.dn?`<div class="vs-dn">${A.dn}</div>`:""}
+        <div class="vs-mean">${A.m}</div>
+      </button>
+      <div class="vs-or">or</div>
+      <button class="vs-card" id="pB">
+        <div class="vs-name">${B.n}</div>
+        ${B.dn?`<div class="vs-dn">${B.dn}</div>`:""}
+        <div class="vs-mean">${B.m}</div>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:14px"><button class="mini" id="pSkip">Skip this pair</button></div>`;
+  b.appendChild(wrap);
+  $("pA").onclick=()=>{recordPick(ai);quizRound++;renderQuiz();};
+  $("pB").onclick=()=>{recordPick(bi);quizRound++;renderQuiz();};
+  $("pSkip").onclick=()=>{quizSkipped++;quizRound++;renderQuiz();};
+}
+function topEntry(obj){return Object.entries(obj).sort((x,y)=>y[1]-x[1])[0];}
+function buildTaste(){
+  const total=quizAnswered;
+  if(!total)return["You skipped every round — fair enough. Here are eight to start you off."];
+  const sentences=[];
+  const soundWord={soft:"soft and flowing",strong:"short and strong",musical:"musical and a little unusual"};
+  const lenWord={s:"short",m:"medium-length",l:"longer"};
+  const rcWord={rare:"rare",classic:"rooted and familiar"};
+  const [sTop,sCount]=topEntry(quizScores.sound);
+  const [lTop,lCount]=topEntry(quizScores.length);
+  const [rTop,rCount]=topEntry(quizScores.rc);
+  const [oTop,oCount]=topEntry(quizScores.origin);
+  const words=[];
+  if(lCount/total>=0.5)words.push(lenWord[lTop]);
+  if(sCount/total>=0.5)words.push(soundWord[sTop]);
+  if(rTop!=="mid"&&rCount/total>=0.5)words.push(rcWord[rTop]);
+  if(words.length>=2){
+    const last=words.pop();
+    sentences.push(`You went ${words.join(", ")} and ${last} almost every time.`);
+  }else if(words.length===1){
+    sentences.push(`You kept choosing ${words[0]} names.`);
+  }
+  if(oCount/total>=0.6){
+    sentences.push(oTop==="S"?"Sanskrit names won out nearly every round.":"You kept reaching past the Indian names, toward the global ones.");
+  }
+  const themeSorted=Object.entries(quizScores.themes).sort((x,y)=>y[1]-x[1]).filter(([,c])=>c/total>=0.35);
+  if(themeSorted.length){
+    const label={light:"light",nature:"nature and earth",water:"water",sky:"the sky",strength:"strength",calm:"calm",love:"love and warmth",wisdom:"wisdom"};
+    const top=themeSorted.slice(0,2).map(([t])=>label[t]);
+    sentences.push(`Whatever the pair, you kept circling back to ${top.join(" and ")}.`);
+  }
+  if(quizSkipped>=4)sentences.push("You skipped a few pairs outright — not every choice has to be easy.");
+  if(!sentences.length)sentences.push("Your picks were all over the map — no one pattern stands out yet.");
+  return sentences.slice(0,4);
+}
+function scoreCandidate(n){
+  const total=quizAnswered||1;let sc=0;
+  sc+=(quizScores.sound[n.s]||0)/total;
+  sc+=(quizScores.length[lenBucket(n)]||0)/total;
+  const rc=rcOf(n);
+  if(rc!=="mid")sc+=(quizScores.rc[rc]||0)/total;
+  sc+=(quizScores.origin[n.o]||0)/total;
+  n.t.forEach(t=>{if(quizScores.themes[t]!==undefined)sc+=(quizScores.themes[t]||0)/total;});
+  return sc;
 }
 function showQuizResults(){
-  const a=quizAns;
-  const scored=NAMES.map(n=>{
-    let s=0;
-    if(a.sound==="any"||n.s===a.sound)s+=2;
-    if(a.origin==="any"||n.o===a.origin)s+=2;
-    if(a.len==="any"||(a.len==="s"&&n.len<=4)||(a.len==="m"&&n.len===5))s+=2;
-    if(a.vibe==="any"||n.t.includes(a.vibe))s+=2;
-    if(n.t.includes(a.theme))s+=3;
-    if(a.theme==="nature"&&n.t.includes("water"))s+=2;
-    if(a.theme==="strength"&&n.t.includes("calm"))s+=2;
-    return{n,s};
-  }).sort((x,y)=>y.s-x.s||Math.random()-.5).slice(0,8);
+  const excluded=new Set([...kept,...seen,...quizShown]);
+  const pool=NAMES.filter(n=>!excluded.has(n.i))
+    .map(n=>({n,sc:quizAnswered?scoreCandidate(n):Math.random()}))
+    .sort((x,y)=>y.sc-x.sc||Math.random()-.5)
+    .slice(0,8);
+  const taste=buildTaste();
   const b=$("quizBody");b.innerHTML="";
-  b.innerHTML=`<div class="q-n">Your results</div><h2 class="q-t" style="margin-bottom:6px">Eight that fit what you said.</h2>
-    <p class="sub" style="margin-bottom:18px">Tap the heart on any of them.</p><div class="rows" id="qrows"></div>`;
+  const head=document.createElement("div");
+  head.innerHTML=`<div class="q-n">Your results</div>
+    <h2 class="q-t" style="margin-bottom:10px">Here's what you kept choosing.</h2>
+    <div style="margin-bottom:18px">${taste.map(s=>`<p class="sub" style="margin:0 0 8px">${s}</p>`).join("")}</div>
+    <p class="count">Eight names you haven't seen yet</p>
+    <div class="rows" id="qrows"></div>`;
+  b.appendChild(head);
   const el=$("qrows");
-  scored.forEach(({n})=>{
+  pool.forEach(({n})=>{
     const r=document.createElement("div");r.className="row";
     r.innerHTML=`<span class="dot" style="background:${HUE[n.o]}"></span>
-      <div class="row-main"><div class="row-name">${n.n}</div><div class="row-mean">${n.m} · ${GENDER[n.g]}</div></div>
+      <div class="row-main"><div class="row-name">${n.n}</div>
+      ${n.dn?`<div class="row-dn">${n.dn}</div>`:""}
+      <div class="row-mean">${n.m} · ${GENDER[n.g]}</div></div>
       <button class="heart" aria-pressed="${kept.includes(n.i)}" aria-label="Keep ${n.n}">${kept.includes(n.i)?"♥":"♡"}</button>`;
     r.querySelector(".heart").onclick=e=>{
-      if(kept.includes(n.i)){kept=kept.filter(x=>x!==n.i);e.target.textContent="♡";}
-      else{kept.push(n.i);e.target.textContent="♥";toast("Kept · "+n.n);}
+      if(kept.includes(n.i)){kept=kept.filter(x=>x!==n.i);e.target.textContent="♡";e.target.setAttribute("aria-pressed","false");}
+      else{kept.push(n.i);e.target.textContent="♥";e.target.setAttribute("aria-pressed","true");toast("Kept · "+n.n);}
       renderBar();save();
     };
     el.appendChild(r);
@@ -685,7 +2057,7 @@ function showQuizResults(){
   const again=document.createElement("button");
   again.className="btn ghost";again.style.width="100%";again.style.marginTop="18px";
   again.textContent="Take it again";
-  again.onclick=()=>{quizAns={};renderQuiz();};
+  again.onclick=startQuiz;
   b.appendChild(again);
 }
 
@@ -757,11 +2129,19 @@ $("bCopy").onclick=async()=>{
   try{await navigator.clipboard.writeText(txt);toast("Copied");}
   catch(e){toast("Couldn't copy");}
 };
-who.addEventListener("blur",save);
-who.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();who.blur();}});
+/* ============ INTRO ============ */
+document.body.style.overflow="hidden";
+function closeIntro(){
+  const el=$("intro");if(!el)return;
+  el.style.transition="opacity .22s ease";
+  el.style.opacity="0";
+  setTimeout(()=>{el.remove();document.body.style.overflow="";},220);
+}
+$("introGo").onclick=closeIntro;
+$("introVeil").onclick=closeIntro;
 
 /* ============ GO ============ */
-buildDeck();renderQuiz();renderRows();renderBar();load();
+buildDeck();startQuiz();renderRows();renderBar();load();
 </script>
 </body>
 </html>
